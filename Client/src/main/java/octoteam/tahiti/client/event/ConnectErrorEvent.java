@@ -1,8 +1,8 @@
-package octoteam.tahiti.server.event;
+package octoteam.tahiti.client.event;
 
 import com.google.common.base.MoreObjects;
 
-public class BaseEvent {
+public class ConnectErrorEvent extends BaseEvent {
 
     @Override
     public String toString() {

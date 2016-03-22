@@ -1,19 +1,13 @@
-package octoteam.tahiti.server.channelhandler;
+package octoteam.tahiti.server.pipeline;
 
-import com.google.common.eventbus.EventBus;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
-import octoteam.tahiti.server.configuration.ServerConfiguration;
+import octoteam.tahiti.server.TahitiServer;
 
-public class PingHandler extends SimpleChannelInboundHandler<Message> {
+public class PingRequestHandler extends PipelineMessageHandler {
 
-    private ServerConfiguration config;
-    private EventBus eventBus;
-
-    public PingHandler(ServerConfiguration config, EventBus eventBus) {
-        this.config = config;
-        this.eventBus = eventBus;
+    public PingRequestHandler(TahitiServer server) {
+        super(server);
     }
 
     @Override

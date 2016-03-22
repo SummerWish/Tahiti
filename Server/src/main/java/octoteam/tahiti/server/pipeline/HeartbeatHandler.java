@@ -1,21 +1,15 @@
-package octoteam.tahiti.server.channelhandler;
+package octoteam.tahiti.server.pipeline;
 
-import com.google.common.eventbus.EventBus;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.IdleStateEvent;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
-import octoteam.tahiti.server.configuration.ServerConfiguration;
+import octoteam.tahiti.server.TahitiServer;
 
-public class HeartbeatHandler extends SimpleChannelInboundHandler<Message> {
+public class HeartbeatHandler extends PipelineMessageHandler {
 
-    private ServerConfiguration config;
-    private EventBus eventBus;
-
-    public HeartbeatHandler(ServerConfiguration config, EventBus eventBus) {
-        this.config = config;
-        this.eventBus = eventBus;
+    public HeartbeatHandler(TahitiServer server) {
+        super(server);
     }
 
     @Override

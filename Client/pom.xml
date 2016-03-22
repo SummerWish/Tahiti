@@ -31,6 +31,21 @@
             <artifactId>jline</artifactId>
             <version>2.9</version>
         </dependency>
+        <dependency>
+            <groupId>com.googlecode.lanterna</groupId>
+            <artifactId>lanterna</artifactId>
+            <version>3.0.0-beta2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>18.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.4</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -57,6 +72,7 @@
                     </arguments>
                 </configuration>
             </plugin>
+
         </plugins>
     </build>
 
