@@ -4,7 +4,8 @@ import com.google.common.eventbus.Subscribe;
 import octoteam.tahiti.server.configuration.ServerConfiguration;
 import octoteam.tahiti.server.event.BaseEvent;
 import org.yaml.snakeyaml.Yaml;
-
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import java.io.InputStream;
 
 public class Console {

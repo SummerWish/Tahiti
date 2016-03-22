@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Client/Client.iml" filepath="$PROJECT_DIR$/Client/Client.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Protocol/Protocol.iml" filepath="$PROJECT_DIR$/Protocol/Protocol.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Server/Server.iml" filepath="$PROJECT_DIR$/Server/Server.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Tahiti.iml" filepath="$PROJECT_DIR$/Tahiti.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tahiti.iml" filepath="$PROJECT_DIR$/tahiti.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Client/tahiti.client.iml" filepath="$PROJECT_DIR$/Client/tahiti.client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Protocol/tahiti.protocol.iml" filepath="$PROJECT_DIR$/Protocol/tahiti.protocol.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Server/tahiti.server.iml" filepath="$PROJECT_DIR$/Server/tahiti.server.iml" />
     </modules>
   </component>
 </project>

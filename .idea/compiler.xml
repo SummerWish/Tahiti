@@ -17,33 +17,34 @@
       <profile default="true" name="Default" enabled="false">
         <processorPath useClasspath="true" />
       </profile>
-      <profile default="false" name="Annotation profile for Protocol" enabled="true">
+      <profile default="false" name="Annotation profile for tahiti.server" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="Protocol" />
+        <module name="tahiti.server" />
       </profile>
-      <profile default="false" name="Annotation profile for Server" enabled="true">
+      <profile default="false" name="Annotation profile for tahiti.client" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="Server" />
+        <module name="tahiti.client" />
       </profile>
-      <profile default="false" name="Annotation profile for Client" enabled="true">
+      <profile default="false" name="Annotation profile for tahiti.protocol" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="Client" />
+        <module name="tahiti.protocol" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="Client" target="1.8" />
-      <module name="Protocol" target="1.8" />
-      <module name="Server" target="1.8" />
+      <module name="tahiti" target="1.8" />
       <module name="Tahiti" target="1.8" />
+      <module name="tahiti.client" target="1.8" />
+      <module name="tahiti.protocol" target="1.8" />
+      <module name="tahiti.server" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

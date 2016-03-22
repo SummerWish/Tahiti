@@ -9,6 +9,7 @@ import octoteam.tahiti.server.TahitiServer;
 import octoteam.tahiti.server.configuration.AccountConfiguration;
 import octoteam.tahiti.server.event.LoginAttemptEvent;
 import octoteam.tahiti.server.event.MessageEvent;
+import octoteam.tahiti.server.Logging;
 
 import java.util.List;
 import java.util.UUID;
@@ -88,6 +89,8 @@ public class AuthRequestHandler extends PipelineMessageHandler {
                 body.getUsername()
         ));
         ctx.writeAndFlush(resp.build());
+
+        Logging.logger.info("我是info信息");
     }
 
 }
