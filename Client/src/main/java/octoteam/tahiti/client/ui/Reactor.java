@@ -2,9 +2,7 @@ package octoteam.tahiti.client.ui;
 
 import com.google.common.eventbus.Subscribe;
 import octoteam.tahiti.client.TahitiClient;
-import octoteam.tahiti.client.event.ConnectErrorEvent;
-import octoteam.tahiti.client.event.ConnectedEvent;
-import octoteam.tahiti.client.event.UIOnLoginCommandEvent;
+import octoteam.tahiti.client.event.*;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
 
 public class Reactor {
@@ -57,6 +55,9 @@ public class Reactor {
         }
     }
 
+    //
+
+
     @Subscribe
     public void onLoginCommand(UIOnLoginCommandEvent event) {
         try {
@@ -73,4 +74,16 @@ public class Reactor {
         }
     }
 
+    @Subscribe
+    public void onClickSend(UIOnSendCommandEvent event) {
+        client.sendMessage(event.getPayload());
+    }
+
+    @Subscribe
+    public void onReceiveMessage(MessageEvent event) {
+        renderer.actionAppendLog(event.getMessage().toString());
+    }
+
 }
+
+

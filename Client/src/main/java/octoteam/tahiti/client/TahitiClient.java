@@ -143,4 +143,29 @@ public class TahitiClient {
         channel.writeAndFlush(req.build());
     }
 
+    public void sendMessage(String message) {
+        Message.Builder req = Message
+                .newBuilder()
+                .setSeqId(getNextSequence())
+                .setDirection(Message.DirectionCode.REQUEST)
+                .setService(Message.ServiceCode.CHAT_SEND_MESSAGE_REQUEST)
+                .setChatMessageReq(SocketMessageProtos.ChatMessageReqBody.newBuilder()
+                        .setPayload(message)
+                );
+        Message msg = req.build();
+        channel.writeAndFlush(msg);
+    }
+/*
+    //add receive message part
+    public void receive(String sendername, Function<Message, Void> callback){
+        Message.Builder req = Message
+                .newBuilder()
+                .setSeqId(getNextSequence(callback))
+                .setDirection(Message.DirectionCode.RESPONSE)
+                .setService(Message.ServiceCode.CHAT_SEND_MESSAGE_REQUEST)
+                //.getChatMessageReqBuilder()
+        channel.read();
+
+    }
+*/
 }

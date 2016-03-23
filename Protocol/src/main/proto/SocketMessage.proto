@@ -9,14 +9,16 @@ option java_outer_classname = "SocketMessageProtos";
 message Message {
 
   enum DirectionCode {
-    REQUEST                     = 0;    // 客户端 -> 服务端(负责生成 seqId)
-    RESPONSE                    = 1;    // 服务端 -> 客户端响应(负责回复 seqId)
-    EVENT                       = 2;    // 服务端 -> 客户端(负责生成 seqId)
-    ACK                         = 3;    // 客户端 -> 服务端响应(负责回复 seqId)
+    UNKNOWN_DIRECTIONCODE       = 0;
+    REQUEST                     = 1;    // 客户端 -> 服务端(负责生成 seqId)
+    RESPONSE                    = 2;    // 服务端 -> 客户端响应(负责回复 seqId)
+    EVENT                       = 3;    // 服务端 -> 客户端(负责生成 seqId)
+    ACK                         = 4;    // 客户端 -> 服务端响应(负责回复 seqId)
   }
 
   enum ServiceCode {
-    PING_REQUEST                = 0;    // 测试请求
+    UNKNOWN_SERVICECODE         = 0;
+    PING_REQUEST                = 1;    // 测试请求
     HEARTBEAT_EVENT             = 5;    // 心跳事件
     USER_SIGN_IN_REQUEST        = 10;   // 登录请求
     CHAT_SEND_MESSAGE_REQUEST   = 20;   // 发送消息请求
@@ -25,10 +27,11 @@ message Message {
   }
 
   enum StatusCode {
-    SUCCESS                     = 0;    // 成功
+    UNKNOWN_STATUSCODE          = 0;
+    SUCCESS                     = 1;    // 成功
 
-    FAIL                        = 1;    // 失败
-    NACK                        = 2;    // 失败
+    FAIL                        = 2;    // 失败
+    NACK                        = 3;    // 失败
 
     NOT_AUTHENTICATED           = 10;   // 需要登录但未登录
     BAD_REQUEST                 = 11;   // 无效请求
@@ -73,14 +76,15 @@ message UserSignInRespBody {
 
 message ChatMessageReqBody {
   string id                     = 1;
-  bytes payload                 = 2;
+  string payload                = 2;
   uint64 timestamp              = 3;
 }
 
 message SessionExpiredEventBody {
   enum Reason {
-    EXPIRED                     = 0;
-    REVOKED                     = 1;
+    UNKNOWN_REASON              = 0;
+    EXPIRED                     = 1;
+    REVOKED                     = 2;
     OTHER                       = 99;
   }
   Reason reason                 = 1;
@@ -88,7 +92,7 @@ message SessionExpiredEventBody {
 
 message ChatBroadcastEventBody {
   string id                     = 1;
-  bytes payload                 = 2;
+  string payload                = 2;
   string senderId               = 3;
   uint64 timestamp              = 4;
 }

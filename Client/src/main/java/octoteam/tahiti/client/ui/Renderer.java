@@ -21,6 +21,7 @@ public class Renderer {
     private static final String LOGIN_STATEDIALOG_TEXT = "login.statedialog.text";
     private static final String LOGIN_STATEDIALOG_VISIBLE = "login.statedialog.visible";
     private static final String MAIN_WINDOW_VISIBLE = "main.window.visible";
+    public static final String MAIN_WINDOW_TEXT = "main.window.text";
 
     private Screen screen;
 
@@ -157,6 +158,13 @@ public class Renderer {
             gui.updateScreen();
             return null;
         });
+
+        store.init(MAIN_WINDOW_TEXT, "");
+        store.observe(MAIN_WINDOW_TEXT, v -> {
+            history.setText((String) v);
+            gui.updateScreen();
+            return null;
+        });
     }
 
     public void shutdown() throws IOException {
@@ -210,4 +218,9 @@ public class Renderer {
         });
     }
 
+    public void actionAppendLog(String s) {
+        store.update(() -> {
+            store.put(MAIN_WINDOW_TEXT, s + "\n\n" + store.get(MAIN_WINDOW_TEXT));
+        });
+    }
 }

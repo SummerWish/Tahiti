@@ -5,25 +5,25 @@ import octoteam.tahiti.protocol.SocketMessageProtos.Message;
 
 public class MessageEvent extends BaseEvent {
 
-    Message msg;
+    Message message;
 
-    public Message getMsg() {
-        return msg;
+    public MessageEvent(Message message) {
+        this.message = message;
     }
 
-    public void setMsg(Message msg) {
-        this.msg = msg;
+    public Message getMessage() {
+        return message;
     }
 
-    public MessageEvent(Message msg) {
-        this.msg = msg;
+    public void setMessage(Message message) {
+        this.message = message;
     }
 
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-                .add("msg", msg)
+                .add("message", message)
                 .toString();
     }
-
+    
 }

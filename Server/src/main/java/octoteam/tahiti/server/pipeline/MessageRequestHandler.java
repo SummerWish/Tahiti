@@ -12,8 +12,19 @@ public class MessageRequestHandler extends PipelineMessageHandler {
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, SocketMessageProtos.Message msg) {
-        // TODO
-        ctx.fireChannelRead(msg);
+        if (msg.getService() != SocketMessageProtos.Message.ServiceCode.CHAT_SEND_MESSAGE_REQUEST) {
+            ctx.fireChannelRead(msg);
+            return;
+        }
+
+        SocketMessageProtos.Message.Builder resp = SocketMessageProtos.Message
+                .newBuilder()
+                .setSeqId(msg.getSeqId())
+                .setDirection(SocketMessageProtos.Message.DirectionCode.RESPONSE)
+                .setStatus(SocketMessageProtos.Message.StatusCode.SUCCESS);
+
+        ctx.writeAndFlush(resp.build());
+
     }
 
 }

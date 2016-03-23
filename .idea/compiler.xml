@@ -41,7 +41,6 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="tahiti" target="1.8" />
-      <module name="Tahiti" target="1.8" />
       <module name="tahiti.client" target="1.8" />
       <module name="tahiti.protocol" target="1.8" />
       <module name="tahiti.server" target="1.8" />

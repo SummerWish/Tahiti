@@ -18,6 +18,7 @@ public class ResponseHandler extends SimpleChannelInboundHandler<Message> {
     public void channelRead0(ChannelHandlerContext ctx, Message msg) {
         client.resolveCallback(msg.getSeqId(), msg);
         client.getEventBus().post(new MessageEvent(msg));
+        System.out.println(msg);
     }
 
 }

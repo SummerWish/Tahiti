@@ -7,6 +7,7 @@ public class Logging {
 
     public static Logger logger = LogManager.getLogger(Logging.class.getName());
 
+    
     public boolean loggerInfo() {
         logger.entry();   //trace级别的信息，在某个方法或者程序逻辑开始的时候调用
 

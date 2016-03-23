@@ -4,24 +4,24 @@ import com.google.common.base.MoreObjects;
 
 public class UIOnSendCommandEvent extends UIEvent {
 
-    private String message;
+    private String payload;
 
-    public UIOnSendCommandEvent(String message) {
-        this.message = message;
+    public UIOnSendCommandEvent(String payload) {
+        this.payload = payload;
     }
 
-    public String getMessage() {
-        return message;
+    public String getPayload() {
+        return payload;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setPayload(String payload) {
+        this.payload = payload;
     }
 
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-                .add("message", message)
+                .add("payload", payload)
                 .toString();
     }
 
