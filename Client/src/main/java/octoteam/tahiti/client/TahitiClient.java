@@ -155,17 +155,4 @@ public class TahitiClient {
         Message msg = req.build();
         channel.writeAndFlush(msg);
     }
-/*
-    //add receive message part
-    public void receive(String sendername, Function<Message, Void> callback){
-        Message.Builder req = Message
-                .newBuilder()
-                .setSeqId(getNextSequence(callback))
-                .setDirection(Message.DirectionCode.RESPONSE)
-                .setService(Message.ServiceCode.CHAT_SEND_MESSAGE_REQUEST)
-                //.getChatMessageReqBuilder()
-        channel.read();
-
-    }
-*/
 }

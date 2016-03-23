@@ -3,21 +3,21 @@
 
     <appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <PatternLayout pattern="%d{HH:mm:ss} - %msg%n"/>
         </Console>
 
-        <File name="File" fileName="logs/testFile.log">
-              <PatternLayout pattern="%m%n" />
-        </File>
+        <!--<File name="File" fileName="logs/testFile.log">-->
+              <!--<PatternLayout pattern="%m%n" />-->
+        <!--</File>-->
 
-        <RollingFile name="RollingFile" fileName="logs/my.log"
+        <RollingFile name="RollingFile" fileName="logs/server.log"
                      filePattern="logs/$${date:yyyy-MM}/app-%d{yyyy-MM-dd-HH-mm}-%i.log.gz">
             <PatternLayout>
                 <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
             </PatternLayout>
             <Policies>
-                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
-                <SizeBasedTriggeringPolicy size="233MB"/>
+                <TimeBasedTriggeringPolicy interval="60" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="10MB"/>
             </Policies>
         </RollingFile>
     </appenders>
@@ -27,11 +27,11 @@
             <appenderRef ref="Console"/>
         </root>
 
-        <Logger name="octoteam.tahiti.server.Logging" level="trace" >
-            <AppenderRef ref="File" />
-        </Logger>
+        <!--<Logger name="octoteam.tahiti.server.Logging" level="INFO" >-->
+            <!--<AppenderRef ref="File" />-->
+        <!--</Logger>-->
 
-        <Logger name="octoteam.tahiti.server.Logging" level="INFO" >
+        <Logger name="octoteam.tahiti.server.Logging" level="INFO"  >
             <AppenderRef ref="RollingFile"/>
         </Logger>
     </loggers>

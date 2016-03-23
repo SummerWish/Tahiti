@@ -7,6 +7,8 @@ import org.yaml.snakeyaml.Yaml;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import java.io.InputStream;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Console {
 
@@ -17,6 +19,7 @@ public class Console {
         ServerConfiguration config = yaml.loadAs(in, ServerConfiguration.class);
 
         TahitiServer server = new TahitiServer(config);
+        server.getEventBus().register(new Logging());
         server.getEventBus().register(new Object() {
             @Subscribe
             public void listenAllEvent(BaseEvent event) {
@@ -24,7 +27,10 @@ public class Console {
             }
         });
 
+        Timer timer = new Timer(true);
+        timer.scheduleAtFixedRate(new LoggingPerMinTask(), 60*1000, 60*1000); //after starting 60s, count per 60s
         server.run();
+
 
     }
 
