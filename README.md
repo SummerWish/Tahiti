@@ -2,7 +2,7 @@
 
 ## Reuseable Components
 
-[Config Management 配置管理构件](https://github.com/SummerWish/TahitiConfigManager)：动态地加载配置，支持 JSON、Yaml、INI 格式
+[Config Management 配置管理构件](https://github.com/SummerWish/TahitiConfigManager)：动态地加载配置，支持 JSON、YAML 格式
 
 [Performance Monitor 性能监控构件](https://github.com/SummerWish/TahitiPerformanceMonitor)：监控计数型指标和数值型指标，定时生成报告写入文件
 
