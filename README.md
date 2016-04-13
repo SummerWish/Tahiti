@@ -18,6 +18,8 @@
 
 [Manage Documentation 管理文档](https://github.com/SummerWish/Tahiti/blob/master/doc/Tahiti%20%E7%AE%A1%E7%90%86%E6%96%87%E6%A1%A3.md)
 
+[Component Selection 构件选择文档](https://github.com/SummerWish/Tahiti/blob/master/doc/%E6%9E%84%E4%BB%B6%E9%80%89%E6%8B%A9%E6%96%87%E6%A1%A3.md)
+
 ## Group Members
 
 李平山 1352840 [@nicktogo](https://github.com/nicktogo)
