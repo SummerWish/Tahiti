@@ -1,0 +1,9 @@
+[submodule "Components/TahitiConfigManager"]
+	path = Components/TahitiConfigManager
+	url = https://github.com/SummerWish/TahitiConfigManager
+[submodule "Components/TahitiPerformanceMonitor"]
+	path = Components/TahitiPerformanceMonitor
+	url = https://github.com/SummerWish/TahitiPerformanceMonitor
+[submodule "Components/TahitiQuotaLimiter"]
+	path = Components/TahitiQuotaLimiter
+	url = https://github.com/SummerWish/TahitiQuotaLimiter
