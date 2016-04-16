@@ -4,21 +4,29 @@ import com.google.common.eventbus.Subscribe;
 import octoteam.tahiti.server.event.LoginAttemptEvent;
 import octoteam.tahiti.server.event.MessageEvent;
 import octoteam.tahiti.server.event.MessageForwardEvent;
-import otcoteam.tahiti.performance.PerformanceMonitor;
-import otcoteam.tahiti.performance.recorder.CountingRecorder;
-import otcoteam.tahiti.performance.reporter.RollingFileReporter;
+import wheellllll.performance.LogUtils;
+import wheellllll.performance.PerformanceManager;
 
 import java.util.concurrent.TimeUnit;
 
+/*
+import otcoteam.tahiti.performance.PerformanceMonitor;
+import otcoteam.tahiti.performance.recorder.CountingRecorder;
+import otcoteam.tahiti.performance.reporter.RollingFileReporter;*/
+
 class IndexLogger {
 
+    /*
     private CountingRecorder validLoginRecorder;
     private CountingRecorder invalidLoginRecorder;
     private CountingRecorder receivedMessageRecorder;
     private CountingRecorder ignoredMessageRecorder;
-    private CountingRecorder forwardedMessageRecorder;
+    private CountingRecorder forwardedMessageRecorder;*/
+
+    private  final PerformanceManager pm;
 
     IndexLogger(String filePattern, int periodSeconds) {
+        /*
         new PerformanceMonitor(new RollingFileReporter(filePattern))
                 .addRecorder(validLoginRecorder = new CountingRecorder("Valid login times"))
                 .addRecorder(invalidLoginRecorder = new CountingRecorder("Invalid login times"))
@@ -26,6 +34,17 @@ class IndexLogger {
                 .addRecorder(ignoredMessageRecorder = new CountingRecorder("Ignored messages"))
                 .addRecorder(forwardedMessageRecorder = new CountingRecorder("Forwarded messages"))
                 .start(periodSeconds, TimeUnit.SECONDS);
+                */
+        LogUtils.setLogPrefix(filePattern);
+        pm = new PerformanceManager();
+        pm.addIndex("Valid Login Times");
+        pm.addIndex("Invalid Login Times");
+        pm.addIndex("Received Messages");
+        pm.addIndex("Ignored Messages");
+        pm.addIndex("Forwarded messages");
+        pm.setTimeUnit(TimeUnit.SECONDS);
+        pm.setInitialDelay(1);
+        pm.setPeriod(periodSeconds);
     }
 
     /**
@@ -38,9 +57,11 @@ class IndexLogger {
     @Subscribe
     public void onLoginAttempt(LoginAttemptEvent event) {
         if (event.getSuccess()) {
-            validLoginRecorder.record();
+            //validLoginRecorder.record();
+            pm.updateIndex("Valid Login Times",1);
         } else {
-            invalidLoginRecorder.record();
+            //invalidLoginRecorder.record();
+            pm.updateIndex("Invalid Login Times",1);
         }
     }
 
@@ -54,9 +75,11 @@ class IndexLogger {
     @Subscribe
     public void onMessage(MessageEvent event) {
         if (event.isAuthenticated()) {
-            receivedMessageRecorder.record();
+            //receivedMessageRecorder.record();
+            pm.updateIndex("Received Messages",1);
         } else {
-            ignoredMessageRecorder.record();
+            //ignoredMessageRecorder.record();
+            pm.updateIndex("Ignored Messages",1);
         }
     }
 
@@ -69,7 +92,8 @@ class IndexLogger {
      */
     @Subscribe
     public void onForwardedMessage(MessageForwardEvent event) {
-        forwardedMessageRecorder.record();
+        //forwardedMessageRecorder.record();
+        pm.updateIndex("Forwarded messages",1);
     }
 
 }

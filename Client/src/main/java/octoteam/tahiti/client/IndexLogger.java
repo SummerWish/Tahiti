@@ -35,16 +35,16 @@ class IndexLogger {
 
     // use the PerformanceManager of Team1
     private final PerformanceManager pm;
-    IndexLogger(String filePattern, int periodSeconds){
-        LogUtils.setLogPrefix(filePattern);
-        pm = new PerformanceManager();
-        pm.addIndex("Successfully Login Times");
-        pm.addIndex("Failed Login Times");
-        pm.addIndex("Sent Messages");
-        pm.addIndex("Received Messages");
-        pm.setTimeUnit(TimeUnit.SECONDS);
-        pm.setInitialDelay(1);
-        pm.setPeriod(periodSeconds);
+        IndexLogger(String filePattern, int periodSeconds){
+            LogUtils.setLogPrefix(filePattern);
+            pm = new PerformanceManager();
+            pm.addIndex("Successfully Login Times");
+            pm.addIndex("Failed Login Times");
+            pm.addIndex("Sent Messages");
+            pm.addIndex("Received Messages");
+            pm.setTimeUnit(TimeUnit.SECONDS);
+            pm.setInitialDelay(1);
+            pm.setPeriod(periodSeconds);
     }
 
     /**
