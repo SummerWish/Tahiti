@@ -4,19 +4,25 @@ import com.google.common.eventbus.Subscribe;
 import octoteam.tahiti.client.event.ChatMessageEvent;
 import octoteam.tahiti.client.event.LoginAttemptEvent;
 import octoteam.tahiti.client.event.SendMessageEvent;
-import otcoteam.tahiti.performance.PerformanceMonitor;
-import otcoteam.tahiti.performance.recorder.CountingRecorder;
-import otcoteam.tahiti.performance.reporter.RollingFileReporter;
-
+import wheellllll.performance.LogUtils;
+import wheellllll.performance.PerformanceManager;
+/*
+import octoteam.tahiti.performance.PerformanceMonitor;
+import octoteam.tahiti.performance.recorder.CountingRecorder;
+import octoteam.tahiti.performance.reporter.RollingFileReporter;
+*/
 import java.util.concurrent.TimeUnit;
 
 class IndexLogger {
-
+    /*
     private final CountingRecorder successfulLoginRecorder;
     private final CountingRecorder failedLoginRecorder;
     private final CountingRecorder sendMessageRecorder;
     private final CountingRecorder receivedMessageRecorder;
+    */
 
+    /*
+    //this is our Performance Unit Realization
     IndexLogger(String filePattern, int periodSeconds) {
         new PerformanceMonitor(new RollingFileReporter(filePattern))
                 .addRecorder(successfulLoginRecorder = new CountingRecorder("Successful login times"))
@@ -24,6 +30,21 @@ class IndexLogger {
                 .addRecorder(sendMessageRecorder = new CountingRecorder("Sent messages"))
                 .addRecorder(receivedMessageRecorder = new CountingRecorder("Received messages"))
                 .start(periodSeconds, TimeUnit.SECONDS);
+    }
+    */
+
+    // use the PerformanceManager of Team1
+    private final PerformanceManager pm;
+    IndexLogger(String filePattern, int periodSeconds){
+        LogUtils.setLogPrefix(filePattern);
+        pm = new PerformanceManager();
+        pm.addIndex("Successfully Login Times");
+        pm.addIndex("Failed Login Times");
+        pm.addIndex("Sent Messages");
+        pm.addIndex("Received Messages");
+        pm.setTimeUnit(TimeUnit.SECONDS);
+        pm.setInitialDelay(1);
+        pm.setPeriod(periodSeconds);
     }
 
     /**
@@ -33,12 +54,22 @@ class IndexLogger {
      *
      * @param event 事件对象
      */
-    @Subscribe
+
+    /*
     public void onLogin(LoginAttemptEvent event) {
         if (event.isSuccess()) {
             successfulLoginRecorder.record();
         } else {
             failedLoginRecorder.record();
+        }
+    }*/
+
+    @Subscribe
+    public void onLogin(LoginAttemptEvent event){
+        if(event.isSuccess()){
+            pm.updateIndex("Successfully Login Times",1);
+        }else{
+            pm.updateIndex("Failed Login Times",1);
         }
     }
 
@@ -49,9 +80,12 @@ class IndexLogger {
      *
      * @param event 事件对象
      */
-    @Subscribe
-    public void onSendMessage(SendMessageEvent event) {
+    /*public void onSendMessage(SendMessageEvent event) {
         sendMessageRecorder.record();
+    }*/
+    @Subscribe
+    public void onSendMessage(SendMessageEvent event){
+        pm.updateIndex("Sent Messages",1);
     }
 
     /**
@@ -61,9 +95,12 @@ class IndexLogger {
      *
      * @param event 事件对象
      */
+    /*public void onReceiveChatMessage(ChatMessageEvent event) {
+        receivedMessageRecorder.record();
+    }*/
     @Subscribe
     public void onReceiveChatMessage(ChatMessageEvent event) {
-        receivedMessageRecorder.record();
+        pm.updateIndex("Received Messages",1);
     }
 
 }

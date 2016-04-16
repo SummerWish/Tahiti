@@ -5,7 +5,7 @@ import octoteam.tahiti.client.configuration.ClientConfiguration;
 import octoteam.tahiti.client.ui.Reactor;
 import octoteam.tahiti.client.ui.Renderer;
 import octoteam.tahiti.config.ConfigManager;
-import octoteam.tahiti.config.loader.YamlLoader;
+import octoteam.tahiti.config.loader.YamlAdapter;
 
 import java.nio.file.Paths;
 
@@ -14,7 +14,7 @@ public class Console {
     public static void main(String[] args) throws Exception {
 
         // Load configuration
-        ConfigManager configManager = new ConfigManager(new YamlLoader(),
+        ConfigManager configManager = new ConfigManager(new YamlAdapter(),
                 "resource/tahiti_client.yaml",
                 Paths.get(Console.class.getClass().getResource("/tahiti_client.yaml").toURI()).toString()
         );
