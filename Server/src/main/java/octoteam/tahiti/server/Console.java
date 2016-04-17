@@ -4,9 +4,6 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
-import octoteam.tahiti.config.ConfigManager;
-import octoteam.tahiti.config.loader.YamlLoader;
-import octoteam.tahiti.server.configuration.ServerConfiguration;
 import octoteam.tahiti.server.model.Account;
 import octoteam.tahiti.server.repository.AccountRepository;
 import octoteam.tahiti.server.repository.DatabaseAccountRepository;
@@ -17,6 +14,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
+import wheellllll.config.Config;
 
 import java.nio.file.Paths;
 
@@ -34,14 +32,11 @@ public class Console {
         CommandLine cmd = parser.parse(options, args);
 
         // Load configuration
-        ConfigManager configManager = new ConfigManager(new YamlLoader(),
-                "resource/tahiti_server.yaml",
-                Paths.get(Console.class.getClass().getResource("/tahiti_server.yaml").toURI()).toString()
-        );
-        ServerConfiguration config = configManager.loadToBean(ServerConfiguration.class);
+        Config.setConfigName(Paths.get(Console.class.getClass().getResource("/tahiti_server.conf").toURI()).toString());
+        Config config = Config.getConfig();
 
         // Open database connection
-        ConnectionSource connectionSource = new JdbcConnectionSource(config.getDatabase());
+        ConnectionSource connectionSource = new JdbcConnectionSource(config.getString("database"));
         AccountRepository repository = new DatabaseAccountRepository(connectionSource);
         AccountService accountService = new DefaultAccountService(repository);
 
@@ -62,7 +57,7 @@ public class Console {
 
             // Create event bus
             EventBus serverEventBus = new EventBus();
-            serverEventBus.register(new IndexLogger(config.getLogFile(), 60));
+            serverEventBus.register(new IndexLogger(config.getString("logFile"), 60));
             serverEventBus.register(new Object() {
                 @Subscribe
                 public void listenAllEvent(BaseEvent event) {

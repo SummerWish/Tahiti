@@ -9,32 +9,11 @@ import wheellllll.performance.PerformanceManager;
 
 import java.util.concurrent.TimeUnit;
 
-/*
-import otcoteam.tahiti.performance.PerformanceMonitor;
-import otcoteam.tahiti.performance.recorder.CountingRecorder;
-import otcoteam.tahiti.performance.reporter.RollingFileReporter;*/
-
 class IndexLogger {
 
-    /*
-    private CountingRecorder validLoginRecorder;
-    private CountingRecorder invalidLoginRecorder;
-    private CountingRecorder receivedMessageRecorder;
-    private CountingRecorder ignoredMessageRecorder;
-    private CountingRecorder forwardedMessageRecorder;*/
-
-    private  final PerformanceManager pm;
+    private final PerformanceManager pm;
 
     IndexLogger(String filePattern, int periodSeconds) {
-        /*
-        new PerformanceMonitor(new RollingFileReporter(filePattern))
-                .addRecorder(validLoginRecorder = new CountingRecorder("Valid login times"))
-                .addRecorder(invalidLoginRecorder = new CountingRecorder("Invalid login times"))
-                .addRecorder(receivedMessageRecorder = new CountingRecorder("Received messages"))
-                .addRecorder(ignoredMessageRecorder = new CountingRecorder("Ignored messages"))
-                .addRecorder(forwardedMessageRecorder = new CountingRecorder("Forwarded messages"))
-                .start(periodSeconds, TimeUnit.SECONDS);
-                */
         LogUtils.setLogPrefix(filePattern);
         pm = new PerformanceManager();
         pm.addIndex("Valid Login Times");
@@ -57,11 +36,9 @@ class IndexLogger {
     @Subscribe
     public void onLoginAttempt(LoginAttemptEvent event) {
         if (event.getSuccess()) {
-            //validLoginRecorder.record();
-            pm.updateIndex("Valid Login Times",1);
+            pm.updateIndex("Valid Login Times", 1);
         } else {
-            //invalidLoginRecorder.record();
-            pm.updateIndex("Invalid Login Times",1);
+            pm.updateIndex("Invalid Login Times", 1);
         }
     }
 
@@ -75,11 +52,9 @@ class IndexLogger {
     @Subscribe
     public void onMessage(MessageEvent event) {
         if (event.isAuthenticated()) {
-            //receivedMessageRecorder.record();
-            pm.updateIndex("Received Messages",1);
+            pm.updateIndex("Received Messages", 1);
         } else {
-            //ignoredMessageRecorder.record();
-            pm.updateIndex("Ignored Messages",1);
+            pm.updateIndex("Ignored Messages", 1);
         }
     }
 
@@ -92,8 +67,7 @@ class IndexLogger {
      */
     @Subscribe
     public void onForwardedMessage(MessageForwardEvent event) {
-        //forwardedMessageRecorder.record();
-        pm.updateIndex("Forwarded messages",1);
+        pm.updateIndex("Forwarded messages", 1);
     }
 
 }

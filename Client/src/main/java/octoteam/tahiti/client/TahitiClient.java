@@ -10,8 +10,6 @@ import io.netty.handler.codec.protobuf.ProtobufDecoder;
 import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
-import octoteam.tahiti.client.configuration.ChatServiceConfiguration;
-import octoteam.tahiti.client.configuration.ClientConfiguration;
 import octoteam.tahiti.client.event.ConnectErrorEvent;
 import octoteam.tahiti.client.event.ConnectedEvent;
 import octoteam.tahiti.client.event.DisconnectedEvent;
@@ -20,6 +18,7 @@ import octoteam.tahiti.protocol.SocketMessageProtos.ChatSendMessageReqBody;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
 import octoteam.tahiti.protocol.SocketMessageProtos.UserSignInReqBody;
 import octoteam.tahiti.shared.netty.pipeline.UserEventToEventBusHandler;
+import wheellllll.config.Config;
 
 import java.util.Date;
 
@@ -27,7 +26,7 @@ public class TahitiClient {
 
     private EventBus eventBus;
 
-    private ClientConfiguration config;
+    private Config config;
 
     private CallbackRepository callbackRepo;
 
@@ -37,7 +36,7 @@ public class TahitiClient {
 
     private volatile Channel channel;
 
-    public TahitiClient(ClientConfiguration config, EventBus eventBus) {
+    public TahitiClient(Config config, EventBus eventBus) {
         this.config = config;
         this.eventBus = eventBus;
         this.init();
@@ -84,8 +83,7 @@ public class TahitiClient {
     }
 
     public ChannelFuture connectAsync() {
-        ChatServiceConfiguration serviceConfig = config.getChatService();
-        ChannelFuture connectFuture = bootstrap.connect(serviceConfig.getHost(), serviceConfig.getPort());
+        ChannelFuture connectFuture = bootstrap.connect(config.getString("chatService.host"), config.getInt("charService.port"));
         connectFuture.addListener(connFuture -> {
             if (!connectFuture.isSuccess()) {
                 eventBus.post(new ConnectErrorEvent());
@@ -154,7 +152,7 @@ public class TahitiClient {
     }
 
     public void sendMessage(String message) {
-        sendMessage(message);
+        sendMessage(message, null);
     }
 
 }

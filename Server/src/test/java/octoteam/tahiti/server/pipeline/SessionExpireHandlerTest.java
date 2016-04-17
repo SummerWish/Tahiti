@@ -3,11 +3,9 @@ package octoteam.tahiti.server.pipeline;
 import io.netty.channel.embedded.EmbeddedChannel;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
 import octoteam.tahiti.protocol.SocketMessageProtos.SessionExpiredPushBody;
-//import octoteam.tahiti.quota.CapacityLimiter;
-import wheellllll.license.License;
 import octoteam.tahiti.server.event.RateLimitExceededEvent;
 import org.junit.Test;
-
+import wheellllll.license.License;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

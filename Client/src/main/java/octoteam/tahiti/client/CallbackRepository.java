@@ -40,7 +40,7 @@ public class CallbackRepository {
      * 根据序列值调用回调
      *
      * @param seqId 序列值
-     * @param msg
+     * @param msg   消息内容
      */
     public void resolveCallback(long seqId, Message msg) {
         if (callbacks.containsKey(seqId)) {

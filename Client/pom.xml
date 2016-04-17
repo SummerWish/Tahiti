@@ -24,34 +24,21 @@
     </repositories>
 
     <artifactId>tahiti-client</artifactId>
-    <dependencies>
-        <dependency>
-            <groupId>octoteam.tahiti</groupId>
-            <artifactId>tahiti-config</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>1.17</version>
-        </dependency>
-        <!--
-        <dependency>
-            <groupId>octoteam.tahiti</groupId>
-            <artifactId>tahiti-performance</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        -->
 
+    <dependencies>
         <dependency>
             <groupId>wheellllll</groupId>
             <artifactId>PerformanceManager</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
-
         <dependency>
             <groupId>octoteam.tahiti</groupId>
             <artifactId>tahiti-shared</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>wheellllll</groupId>
+            <artifactId>ConfigManager</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>

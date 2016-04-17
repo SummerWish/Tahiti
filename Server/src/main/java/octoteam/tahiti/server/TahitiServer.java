@@ -12,28 +12,24 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.timeout.IdleStateHandler;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message.ServiceCode;
-//import octoteam.tahiti.quota.CapacityLimiter;
-//import octoteam.tahiti.quota.ThroughputLimiter;
-import wheellllll.license.License;
-import octoteam.tahiti.server.configuration.ChatServiceConfiguration;
-import octoteam.tahiti.server.configuration.ServerConfiguration;
 import octoteam.tahiti.server.event.RateLimitExceededEvent;
 import octoteam.tahiti.server.pipeline.*;
 import octoteam.tahiti.server.service.AccountService;
 import octoteam.tahiti.shared.netty.pipeline.UserEventToEventBusHandler;
-
+import wheellllll.config.Config;
+import wheellllll.license.License;
 
 import java.util.concurrent.TimeUnit;
 
 /**
- * 服务端<br>
+ * 服务端
  * 初始化客户端链接，提供用户验证、收发消息及生成日志服务
  */
 public class TahitiServer {
 
     private final EventBus eventBus;
 
-    private final ServerConfiguration config;
+    private final Config config;
 
     private final AccountService accountService;
 
@@ -44,7 +40,7 @@ public class TahitiServer {
      * @param eventBus       服务端事件总线
      * @param accountService 用户服务
      */
-    public TahitiServer(ServerConfiguration config, EventBus eventBus, AccountService accountService) {
+    public TahitiServer(Config config, EventBus eventBus, AccountService accountService) {
         this.eventBus = eventBus;
         this.config = config;
         this.accountService = accountService;
@@ -83,13 +79,13 @@ public class TahitiServer {
                                             ServiceCode.CHAT_SEND_MESSAGE_REQUEST,
                                             RateLimitExceededEvent.NAME_PER_SECOND,
                                             () -> new License(License.LicenseType.THROUGHPUT,
-                                                    config.getRateLimit().getPerSecond()))
+                                                    config.getInt("rateLimit.perSecond")))
                                     )
                                     .addLast(new RequestRateLimitHandler(
                                             ServiceCode.CHAT_SEND_MESSAGE_REQUEST,
                                             RateLimitExceededEvent.NAME_PER_SESSION,
                                             () -> new License(License.LicenseType.CAPACITY,
-                                                    config.getRateLimit().getPerSession()))
+                                                    config.getInt("rateLimit.perSession")))
                                     )
                                     .addLast(new SessionExpireHandler())
                                     .addLast(new MessageRequestHandler())
@@ -99,12 +95,11 @@ public class TahitiServer {
                         }
                     });
 
-            ChatServiceConfiguration serviceConfig = this.config.getChatService();
-            ChannelFuture cf = serverBootstrap.bind(serviceConfig.getBindHost(), serviceConfig.getBindPort()).sync();
+            ChannelFuture cf = serverBootstrap.bind(config.getString("chatService.bindHost"), config.getInt("chatService.bindPort")).sync();
             System.out.println(String.format(
                     "Tahiti server listening at %s:%s",
-                    serviceConfig.getBindHost(),
-                    serviceConfig.getBindPort()
+                    config.getString("chatService.bindHost"),
+                    config.getInt("chatService.bindPort")
             ));
             cf.channel().closeFuture().sync();
         } finally {

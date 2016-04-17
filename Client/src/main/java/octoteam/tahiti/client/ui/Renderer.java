@@ -36,7 +36,7 @@ public class Renderer {
 
     private Store store = new Store();
 
-    public Renderer(EventBus eventBus) throws IOException, InterruptedException {
+    public Renderer(EventBus eventBus) throws IOException {
         this.eventBus = eventBus;
 
         Terminal terminal = new DefaultTerminalFactory()

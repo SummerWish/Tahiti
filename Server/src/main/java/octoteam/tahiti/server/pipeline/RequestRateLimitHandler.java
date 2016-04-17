@@ -3,13 +3,11 @@ package octoteam.tahiti.server.pipeline;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
-//import octoteam.tahiti.quota.QuotaLimiter;
-import wheellllll.license.License;
 import octoteam.tahiti.server.event.RateLimitExceededEvent;
 import octoteam.tahiti.server.session.PipelineHelper;
 import octoteam.tahiti.shared.netty.MessageHandler;
 import octoteam.tahiti.shared.protocol.ProtocolUtil;
-
+import wheellllll.license.License;
 
 import java.util.concurrent.Callable;
 
@@ -53,7 +51,7 @@ public class RequestRateLimitHandler extends MessageHandler {
             quotaLimiter = this.quotaLimiterFactory.call();
             PipelineHelper.getSession(ctx).put(sessionKey, quotaLimiter);
         }
-        if (quotaLimiter.use()==License.Availability.AVAILABLE) {
+        if (quotaLimiter.use() == License.Availability.AVAILABLE) {
             ctx.fireChannelRead(msg);
         } else {
             RateLimitExceededEvent evt = new RateLimitExceededEvent(name);

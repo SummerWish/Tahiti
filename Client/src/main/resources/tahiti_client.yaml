@@ -1,5 +1,0 @@
-chatService:
-    host: 127.0.0.1
-    port: 6666
-
-logFile: resource/tahiti_client_%d{yyyy-MM-dd_HH-mm}.log
