@@ -3,9 +3,11 @@ package octoteam.tahiti.server.pipeline;
 import io.netty.channel.embedded.EmbeddedChannel;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
 import octoteam.tahiti.protocol.SocketMessageProtos.SessionExpiredPushBody;
-import octoteam.tahiti.quota.CapacityLimiter;
+//import octoteam.tahiti.quota.CapacityLimiter;
+import wheellllll.license.License;
 import octoteam.tahiti.server.event.RateLimitExceededEvent;
 import org.junit.Test;
+
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -21,7 +23,7 @@ public class SessionExpireHandlerTest {
         EmbeddedChannel channel = new EmbeddedChannel(new RequestRateLimitHandler(
                 Message.ServiceCode.PING_REQUEST,
                 RateLimitExceededEvent.NAME_PER_SESSION,
-                () -> new CapacityLimiter(2)), new SessionExpireHandler());
+                () -> new License(License.LicenseType.CAPACITY, 2)), new SessionExpireHandler());
 
         for (int i = 0; i < 3; i++) {
             Message pingRequest = Message.newBuilder()

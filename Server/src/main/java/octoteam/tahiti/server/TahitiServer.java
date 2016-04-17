@@ -12,14 +12,16 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.timeout.IdleStateHandler;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message.ServiceCode;
-import octoteam.tahiti.quota.CapacityLimiter;
-import octoteam.tahiti.quota.ThroughputLimiter;
+//import octoteam.tahiti.quota.CapacityLimiter;
+//import octoteam.tahiti.quota.ThroughputLimiter;
+import wheellllll.license.License;
 import octoteam.tahiti.server.configuration.ChatServiceConfiguration;
 import octoteam.tahiti.server.configuration.ServerConfiguration;
 import octoteam.tahiti.server.event.RateLimitExceededEvent;
 import octoteam.tahiti.server.pipeline.*;
 import octoteam.tahiti.server.service.AccountService;
 import octoteam.tahiti.shared.netty.pipeline.UserEventToEventBusHandler;
+
 
 import java.util.concurrent.TimeUnit;
 
@@ -80,12 +82,14 @@ public class TahitiServer {
                                     .addLast(new RequestRateLimitHandler(
                                             ServiceCode.CHAT_SEND_MESSAGE_REQUEST,
                                             RateLimitExceededEvent.NAME_PER_SECOND,
-                                            () -> new ThroughputLimiter(config.getRateLimit().getPerSecond()))
+                                            () -> new License(License.LicenseType.THROUGHPUT,
+                                                    config.getRateLimit().getPerSecond()))
                                     )
                                     .addLast(new RequestRateLimitHandler(
                                             ServiceCode.CHAT_SEND_MESSAGE_REQUEST,
                                             RateLimitExceededEvent.NAME_PER_SESSION,
-                                            () -> new CapacityLimiter(config.getRateLimit().getPerSession()))
+                                            () -> new License(License.LicenseType.CAPACITY,
+                                                    config.getRateLimit().getPerSession()))
                                     )
                                     .addLast(new SessionExpireHandler())
                                     .addLast(new MessageRequestHandler())

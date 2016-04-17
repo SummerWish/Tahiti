@@ -3,11 +3,13 @@ package octoteam.tahiti.server.pipeline;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
-import octoteam.tahiti.quota.QuotaLimiter;
+//import octoteam.tahiti.quota.QuotaLimiter;
+import wheellllll.license.License;
 import octoteam.tahiti.server.event.RateLimitExceededEvent;
 import octoteam.tahiti.server.session.PipelineHelper;
 import octoteam.tahiti.shared.netty.MessageHandler;
 import octoteam.tahiti.shared.protocol.ProtocolUtil;
+
 
 import java.util.concurrent.Callable;
 
@@ -22,7 +24,7 @@ public class RequestRateLimitHandler extends MessageHandler {
     private final Message.ServiceCode serviceCode;
     private final String name;
     private final String sessionKey;
-    private final Callable<QuotaLimiter> rateLimiterFactory;
+    private final Callable<License> quotaLimiterFactory;
 
     /**
      * @param serviceCode 要限制的消息类别, 只有这个参数指定的消息会被限制
@@ -32,12 +34,12 @@ public class RequestRateLimitHandler extends MessageHandler {
     public RequestRateLimitHandler(
             Message.ServiceCode serviceCode,
             String name,
-            Callable<QuotaLimiter> factory
+            Callable<License> factory
     ) {
         this.serviceCode = serviceCode;
         this.name = name;
         this.sessionKey = "limiter_" + name;
-        this.rateLimiterFactory = factory;
+        this.quotaLimiterFactory = factory;
     }
 
     @Override
@@ -46,12 +48,12 @@ public class RequestRateLimitHandler extends MessageHandler {
             ctx.fireChannelRead(msg);
             return;
         }
-        QuotaLimiter rateLimiter = (QuotaLimiter) PipelineHelper.getSession(ctx).get(sessionKey);
-        if (rateLimiter == null) {
-            rateLimiter = this.rateLimiterFactory.call();
-            PipelineHelper.getSession(ctx).put(sessionKey, rateLimiter);
+        License quotaLimiter = (License) PipelineHelper.getSession(ctx).get(sessionKey);
+        if (quotaLimiter == null) {
+            quotaLimiter = this.quotaLimiterFactory.call();
+            PipelineHelper.getSession(ctx).put(sessionKey, quotaLimiter);
         }
-        if (rateLimiter.tryAcquire()) {
+        if (quotaLimiter.use()==License.Availability.AVAILABLE) {
             ctx.fireChannelRead(msg);
         } else {
             RateLimitExceededEvent evt = new RateLimitExceededEvent(name);

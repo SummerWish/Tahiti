@@ -14,7 +14,7 @@
     <orderEntry type="library" name="Maven: octoteam.tahiti:tahiti-config:1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.yaml:snakeyaml:1.17" level="project" />
     <orderEntry type="library" name="Maven: wheellllll:PerformanceManager:1.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: octoteam.tahiti:tahiti-quota:1.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: wheellllll:LicenseManager:1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.xerial:sqlite-jdbc:3.8.10.2" level="project" />
     <orderEntry type="library" name="Maven: com.j256.ormlite:ormlite-jdbc:4.43" level="project" />
     <orderEntry type="library" name="Maven: com.j256.ormlite:ormlite-core:4.43" level="project" />
