@@ -10,6 +10,10 @@
 
 ## Documentation
 
+[Component Usage Report 构建使用文档](https://github.com/SummerWish/Tahiti/blob/master/doc/%E6%9E%84%E4%BB%B6%E4%BD%BF%E7%94%A8%E6%96%87%E6%A1%A3.md)
+
+[Component Selection 构件选择文档](https://github.com/SummerWish/Tahiti/blob/master/doc/%E6%9E%84%E4%BB%B6%E9%80%89%E6%8B%A9%E6%96%87%E6%A1%A3.md)
+
 [Discussion Solutions 讨论课解决方案](https://github.com/SummerWish/Tahiti/tree/master/doc/discussion_1)
 
 [API Documentation 程序文档](https://summerwish.github.io/Tahiti/)
@@ -18,7 +22,6 @@
 
 [Manage Documentation 管理文档](https://github.com/SummerWish/Tahiti/blob/master/doc/Tahiti%20%E7%AE%A1%E7%90%86%E6%96%87%E6%A1%A3.md)
 
-[Component Selection 构件选择文档](https://github.com/SummerWish/Tahiti/blob/master/doc/%E6%9E%84%E4%BB%B6%E9%80%89%E6%8B%A9%E6%96%87%E6%A1%A3.md)
 
 ## Group Members
 
