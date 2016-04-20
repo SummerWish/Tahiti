@@ -15,6 +15,7 @@ class IndexLogger {
 
     IndexLogger(String filePattern, int periodSeconds) {
         LogUtils.setLogPrefix(filePattern);
+        LogUtils.setLogPath("./log");
         pm = new PerformanceManager();
         pm.addIndex("Valid Login Times");
         pm.addIndex("Invalid Login Times");
@@ -23,7 +24,8 @@ class IndexLogger {
         pm.addIndex("Forwarded messages");
         pm.setTimeUnit(TimeUnit.SECONDS);
         pm.setInitialDelay(1);
-        pm.setPeriod(periodSeconds);
+        pm.setPeriod(periodSeconds);    
+        pm.start();
     }
 
     /**
