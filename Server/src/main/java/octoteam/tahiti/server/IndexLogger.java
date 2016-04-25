@@ -4,6 +4,8 @@ import com.google.common.eventbus.Subscribe;
 import octoteam.tahiti.server.event.LoginAttemptEvent;
 import octoteam.tahiti.server.event.MessageEvent;
 import octoteam.tahiti.server.event.MessageForwardEvent;
+import octoteam.tahiti.shared.event.MessageReceivedEvent;
+import octoteam.tahiti.shared.logger.ReceivedMessageLogger;
 import wheellllll.performance.ArchiveManager;
 import wheellllll.performance.IntervalLogger;
 
@@ -12,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 class IndexLogger {
 
     private final IntervalLogger logger;
+    private final ReceivedMessageLogger rLogger = new ReceivedMessageLogger();
 
     IndexLogger(
             String logDir,
@@ -81,6 +84,15 @@ class IndexLogger {
     @Subscribe
     public void onForwardedMessage(MessageForwardEvent event) {
         logger.updateIndex("Forwarded messages", 1);
+    }
+
+    /**
+     * 订阅消息接收 MEssageReceivedEvent 时间，该事件的类型为该函数的参数类型.
+     * 每接收到一个消息，就将其写入文件中保存
+     */
+    @Subscribe
+    public void onReceivedMessage(MessageReceivedEvent event) {
+        rLogger.log(event);
     }
 
 }

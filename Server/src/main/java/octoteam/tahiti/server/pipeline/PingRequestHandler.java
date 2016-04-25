@@ -3,6 +3,7 @@ package octoteam.tahiti.server.pipeline;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
+import octoteam.tahiti.shared.event.MessageReceivedEvent;
 import octoteam.tahiti.shared.netty.MessageHandler;
 import octoteam.tahiti.shared.protocol.ProtocolUtil;
 
@@ -16,6 +17,7 @@ public class PingRequestHandler extends MessageHandler {
     protected void messageReceived(ChannelHandlerContext ctx, Message msg) {
         if (msg.getService() != Message.ServiceCode.PING_REQUEST) {
             ctx.fireChannelRead(msg);
+            ctx.fireUserEventTriggered(new MessageReceivedEvent(msg));
             return;
         }
 
@@ -26,6 +28,7 @@ public class PingRequestHandler extends MessageHandler {
 
         ctx.writeAndFlush(resp.build());
         ctx.fireChannelRead(msg);
+        ctx.fireUserEventTriggered(new MessageReceivedEvent(msg));
     }
 
 }
