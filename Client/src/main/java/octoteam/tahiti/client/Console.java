@@ -23,7 +23,12 @@ public class Console {
         Reactor reactor = new Reactor(client, renderer);
 
         clientEventBus.register(reactor);
-        clientEventBus.register(new IndexLogger(config.getString("logFile"), 60));
+        clientEventBus.register(new IndexLogger(
+                config.getString("log.logDir"),
+                config.getString("log.logFile"),
+                config.getString("log.archiveDir"),
+                config.getString("log.archiveFile")
+        ));
 
         renderer.actionShowLoginDialog();
 

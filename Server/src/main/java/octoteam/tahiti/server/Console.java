@@ -57,7 +57,12 @@ public class Console {
 
             // Create event bus
             EventBus serverEventBus = new EventBus();
-            serverEventBus.register(new IndexLogger(config.getString("logFile"), 60));
+            serverEventBus.register(new IndexLogger(
+                    config.getString("log.logDir"),
+                    config.getString("log.logFile"),
+                    config.getString("log.archiveDir"),
+                    config.getString("log.archiveFile")
+            ));
             serverEventBus.register(new Object() {
                 @Subscribe
                 public void listenAllEvent(BaseEvent event) {

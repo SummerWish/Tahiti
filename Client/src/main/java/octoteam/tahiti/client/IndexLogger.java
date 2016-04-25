@@ -4,25 +4,33 @@ import com.google.common.eventbus.Subscribe;
 import octoteam.tahiti.client.event.ChatMessageEvent;
 import octoteam.tahiti.client.event.LoginAttemptEvent;
 import octoteam.tahiti.client.event.SendMessageEvent;
-import wheellllll.performance.LogUtils;
-import wheellllll.performance.PerformanceManager;
+import wheellllll.performance.ArchiveManager;
+import wheellllll.performance.IntervalLogger;
 
 import java.util.concurrent.TimeUnit;
 
 class IndexLogger {
 
-    private final PerformanceManager pm;
+    private IntervalLogger logger;
 
-    IndexLogger(String filePattern, int periodSeconds) {
-        LogUtils.setLogPrefix(filePattern);
-        pm = new PerformanceManager();
-        pm.addIndex("Successfully Login Times");
-        pm.addIndex("Failed Login Times");
-        pm.addIndex("Sent Messages");
-        pm.addIndex("Received Messages");
-        pm.setTimeUnit(TimeUnit.SECONDS);
-        pm.setInitialDelay(1);
-        pm.setPeriod(periodSeconds);
+    IndexLogger(String logDir, String logFile, String archiveDir, String archiveFile) {
+        logger = new IntervalLogger();
+        logger.setLogDir(logDir);
+        logger.setLogPrefix(logFile);
+        logger.addIndex("Successfully Login Times");
+        logger.addIndex("Failed Login Times");
+        logger.addIndex("Sent Messages");
+        logger.addIndex("Received Messages");
+        logger.setInterval(60, TimeUnit.SECONDS);
+        logger.setInitialDelay(60);
+
+        ArchiveManager archiveManager = new ArchiveManager();
+        archiveManager.setArchiveDir(archiveDir);
+        archiveManager.setArchivePrefix(archiveFile);
+        archiveManager.setInterval(86400, TimeUnit.SECONDS);
+        archiveManager.addLogger(logger);
+        archiveManager.setInitialDelay(120);
+        archiveManager.start();
     }
 
     /**
@@ -35,9 +43,9 @@ class IndexLogger {
     @Subscribe
     public void onLogin(LoginAttemptEvent event) {
         if (event.isSuccess()) {
-            pm.updateIndex("Successfully Login Times", 1);
+            logger.updateIndex("Successfully Login Times", 1);
         } else {
-            pm.updateIndex("Failed Login Times", 1);
+            logger.updateIndex("Failed Login Times", 1);
         }
     }
 
@@ -50,7 +58,7 @@ class IndexLogger {
      */
     @Subscribe
     public void onSendMessage(SendMessageEvent event) {
-        pm.updateIndex("Sent Messages", 1);
+        logger.updateIndex("Sent Messages", 1);
     }
 
     /**
@@ -62,7 +70,7 @@ class IndexLogger {
      */
     @Subscribe
     public void onReceiveChatMessage(ChatMessageEvent event) {
-        pm.updateIndex("Received Messages", 1);
+        logger.updateIndex("Received Messages", 1);
     }
 
 }

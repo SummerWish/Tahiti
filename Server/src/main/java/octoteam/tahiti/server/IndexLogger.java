@@ -4,26 +4,39 @@ import com.google.common.eventbus.Subscribe;
 import octoteam.tahiti.server.event.LoginAttemptEvent;
 import octoteam.tahiti.server.event.MessageEvent;
 import octoteam.tahiti.server.event.MessageForwardEvent;
-import wheellllll.performance.LogUtils;
-import wheellllll.performance.PerformanceManager;
+import wheellllll.performance.ArchiveManager;
+import wheellllll.performance.IntervalLogger;
 
 import java.util.concurrent.TimeUnit;
 
 class IndexLogger {
 
-    private final PerformanceManager pm;
+    private final IntervalLogger logger;
 
-    IndexLogger(String filePattern, int periodSeconds) {
-        LogUtils.setLogPrefix(filePattern);
-        pm = new PerformanceManager();
-        pm.addIndex("Valid Login Times");
-        pm.addIndex("Invalid Login Times");
-        pm.addIndex("Received Messages");
-        pm.addIndex("Ignored Messages");
-        pm.addIndex("Forwarded messages");
-        pm.setTimeUnit(TimeUnit.SECONDS);
-        pm.setInitialDelay(1);
-        pm.setPeriod(periodSeconds);
+    IndexLogger(
+            String logDir,
+            String logFile,
+            String archiveDir,
+            String archiveFile
+    ) {
+        logger = new IntervalLogger();
+        logger.setLogDir(logDir);
+        logger.setLogPrefix(logFile);
+        logger.addIndex("Valid Login Times");
+        logger.addIndex("Invalid Login Times");
+        logger.addIndex("Received Messages");
+        logger.addIndex("Ignored Messages");
+        logger.addIndex("Forwarded messages");
+        logger.setInterval(60, TimeUnit.SECONDS);
+        logger.setInitialDelay(60);
+
+        ArchiveManager archiveManager = new ArchiveManager();
+        archiveManager.setArchiveDir(archiveDir);
+        archiveManager.setArchivePrefix(archiveFile);
+        archiveManager.setInterval(86400, TimeUnit.SECONDS);
+        archiveManager.addLogger(logger);
+        archiveManager.setInitialDelay(120);
+        archiveManager.start();
     }
 
     /**
@@ -36,9 +49,9 @@ class IndexLogger {
     @Subscribe
     public void onLoginAttempt(LoginAttemptEvent event) {
         if (event.getSuccess()) {
-            pm.updateIndex("Valid Login Times", 1);
+            logger.updateIndex("Valid Login Times", 1);
         } else {
-            pm.updateIndex("Invalid Login Times", 1);
+            logger.updateIndex("Invalid Login Times", 1);
         }
     }
 
@@ -52,9 +65,9 @@ class IndexLogger {
     @Subscribe
     public void onMessage(MessageEvent event) {
         if (event.isAuthenticated()) {
-            pm.updateIndex("Received Messages", 1);
+            logger.updateIndex("Received Messages", 1);
         } else {
-            pm.updateIndex("Ignored Messages", 1);
+            logger.updateIndex("Ignored Messages", 1);
         }
     }
 
@@ -67,7 +80,7 @@ class IndexLogger {
      */
     @Subscribe
     public void onForwardedMessage(MessageForwardEvent event) {
-        pm.updateIndex("Forwarded messages", 1);
+        logger.updateIndex("Forwarded messages", 1);
     }
 
 }
