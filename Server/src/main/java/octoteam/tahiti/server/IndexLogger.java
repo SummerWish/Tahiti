@@ -6,9 +6,15 @@ import octoteam.tahiti.server.event.MessageEvent;
 import octoteam.tahiti.server.event.MessageForwardEvent;
 import octoteam.tahiti.shared.event.MessageReceivedEvent;
 import octoteam.tahiti.shared.logger.ReceivedMessageLogger;
+import org.zeroturnaround.zip.ZipUtil;
 import wheellllll.performance.ArchiveManager;
 import wheellllll.performance.IntervalLogger;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 class IndexLogger {
@@ -44,6 +50,17 @@ class IndexLogger {
         archiveManager.start();
 
         rLogger = new ReceivedMessageLogger(logDir + "/" + messageFile);
+
+        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+        executorService.scheduleAtFixedRate(() -> {
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
+                    String date = sdf.format(new Date());
+                    ZipUtil.pack(new File(logDir), new File(archiveDir + "/tahiti_" + date + ".zip"));
+                },
+                120,
+                86400,
+                TimeUnit.SECONDS
+        );
     }
 
     /**
