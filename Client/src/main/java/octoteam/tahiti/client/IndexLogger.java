@@ -4,6 +4,8 @@ import com.google.common.eventbus.Subscribe;
 import octoteam.tahiti.client.event.ChatMessageEvent;
 import octoteam.tahiti.client.event.LoginAttemptEvent;
 import octoteam.tahiti.client.event.SendMessageEvent;
+import octoteam.tahiti.shared.event.MessageReceivedEvent;
+import octoteam.tahiti.shared.logger.ReceivedMessageLogger;
 import wheellllll.performance.ArchiveManager;
 import wheellllll.performance.IntervalLogger;
 
@@ -12,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 class IndexLogger {
 
     private IntervalLogger logger;
+    private final ReceivedMessageLogger rLogger = new ReceivedMessageLogger();
 
     IndexLogger(String logDir, String logFile, String archiveDir, String archiveFile) {
         logger = new IntervalLogger();
@@ -71,6 +74,11 @@ class IndexLogger {
     @Subscribe
     public void onReceiveChatMessage(ChatMessageEvent event) {
         logger.updateIndex("Received Messages", 1);
+    }
+
+    @Subscribe
+    public void onReceivedMessage(MessageReceivedEvent event) {
+        rLogger.log(event);
     }
 
 }

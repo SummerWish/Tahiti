@@ -15,6 +15,7 @@ import octoteam.tahiti.protocol.SocketMessageProtos.Message.ServiceCode;
 import octoteam.tahiti.server.event.RateLimitExceededEvent;
 import octoteam.tahiti.server.pipeline.*;
 import octoteam.tahiti.server.service.AccountService;
+import octoteam.tahiti.shared.netty.pipeline.MessageReceivedHandler;
 import octoteam.tahiti.shared.netty.pipeline.UserEventToEventBusHandler;
 import wheellllll.config.Config;
 import wheellllll.license.License;
@@ -70,6 +71,7 @@ public class TahitiServer {
                                     .addLast(new ProtobufEncoder())
                                     .addLast(new ProtobufVarint32FrameDecoder())
                                     .addLast(new ProtobufDecoder(Message.getDefaultInstance()))
+                                    .addLast(new MessageReceivedHandler())
                                     .addLast(new IdleStateHandler(0, 0, 30, TimeUnit.SECONDS))
                                     .addLast(new HeartbeatHandler())
                                     .addLast(new PingRequestHandler())

@@ -17,6 +17,7 @@ import octoteam.tahiti.client.pipeline.*;
 import octoteam.tahiti.protocol.SocketMessageProtos.ChatSendMessageReqBody;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
 import octoteam.tahiti.protocol.SocketMessageProtos.UserSignInReqBody;
+import octoteam.tahiti.shared.netty.pipeline.MessageReceivedHandler;
 import octoteam.tahiti.shared.netty.pipeline.UserEventToEventBusHandler;
 import wheellllll.config.Config;
 
@@ -64,6 +65,7 @@ public class TahitiClient {
                                 .addLast(new ProtobufEncoder())
                                 .addLast(new ProtobufVarint32FrameDecoder())
                                 .addLast(new ProtobufDecoder(Message.getDefaultInstance()))
+                                .addLast(new MessageReceivedHandler())
                                 .addLast(new HeartbeatPushHandler())
                                 .addLast(new ResponseCallbackHandler(callbackRepo))
                                 .addLast(new LoginResponseHandler())
