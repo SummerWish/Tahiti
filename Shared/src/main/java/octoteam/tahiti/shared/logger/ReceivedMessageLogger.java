@@ -1,5 +1,6 @@
 package octoteam.tahiti.shared.logger;
 
+import com.google.common.eventbus.Subscribe;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
@@ -58,6 +59,7 @@ public class ReceivedMessageLogger {
         logger.addAppender(fileAppender);
     }
 
+    @Subscribe
     public void log(MessageReceivedEvent event) {
             logger.info(event.toString());
     }

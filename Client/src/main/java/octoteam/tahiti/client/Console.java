@@ -3,6 +3,7 @@ package octoteam.tahiti.client;
 import com.google.common.eventbus.EventBus;
 import octoteam.tahiti.client.ui.Reactor;
 import octoteam.tahiti.client.ui.Renderer;
+import octoteam.tahiti.shared.logger.ReceivedMessageLogger;
 import wheellllll.config.Config;
 
 import java.nio.file.Paths;
@@ -26,10 +27,11 @@ public class Console {
         clientEventBus.register(new IndexLogger(
                 config.getString("log.logDir"),
                 config.getString("log.logFile"),
-                config.getString("log.messageDir"),
-                config.getString("log.messageFile"),
                 config.getString("log.archiveDir"),
                 config.getString("log.archiveFile")
+        ));
+        clientEventBus.register(new ReceivedMessageLogger(
+                config.getString("log.messageDirFile")
         ));
 
         renderer.actionShowLoginDialog();

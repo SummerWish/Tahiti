@@ -14,13 +14,10 @@ import java.util.concurrent.TimeUnit;
 class IndexLogger {
 
     private IntervalLogger logger;
-    private final ReceivedMessageLogger rLogger;
 
     IndexLogger(
             String logDir,
             String logFile,
-            String messageDir,
-            String messageFile,
             String archiveDir,
             String archiveFile
     ) {
@@ -42,8 +39,6 @@ class IndexLogger {
         archiveManager.setInitialDelay(120);
         logger.start();
         archiveManager.start();
-
-        rLogger = new ReceivedMessageLogger(messageDir + "/" + messageFile);
     }
 
     /**
@@ -85,10 +80,4 @@ class IndexLogger {
     public void onReceiveChatMessage(ChatMessageEvent event) {
         logger.updateIndex("Received Messages", 1);
     }
-
-    @Subscribe
-    public void onReceivedMessage(MessageReceivedEvent event) {
-        rLogger.log(event);
-    }
-
 }

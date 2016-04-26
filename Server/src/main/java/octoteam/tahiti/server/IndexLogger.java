@@ -4,30 +4,18 @@ import com.google.common.eventbus.Subscribe;
 import octoteam.tahiti.server.event.LoginAttemptEvent;
 import octoteam.tahiti.server.event.MessageEvent;
 import octoteam.tahiti.server.event.MessageForwardEvent;
-import octoteam.tahiti.shared.event.MessageReceivedEvent;
-import octoteam.tahiti.shared.logger.ReceivedMessageLogger;
-import org.zeroturnaround.zip.ZipUtil;
 import wheellllll.performance.ArchiveManager;
 import wheellllll.performance.IntervalLogger;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 class IndexLogger {
 
     private final IntervalLogger logger;
-    private final ReceivedMessageLogger rLogger;
 
     IndexLogger(
-            String tahitiDir,
             String logDir,
             String logFile,
-            String messageDir,
-            String messageFile,
             String archiveDir,
             String archiveFile
     ) {
@@ -50,19 +38,6 @@ class IndexLogger {
         archiveManager.setInitialDelay(120);
         logger.start();
         archiveManager.start();
-
-        rLogger = new ReceivedMessageLogger(messageDir + "/" + messageFile);
-
-        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
-        executorService.scheduleAtFixedRate(() -> {
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
-                    String date = sdf.format(new Date());
-                    ZipUtil.pack(new File(tahitiDir), new File(archiveDir + "/tahiti_" + date + ".zip"));
-                },
-                120,
-                86400,
-                TimeUnit.SECONDS
-        );
     }
 
     /**
@@ -108,14 +83,4 @@ class IndexLogger {
     public void onForwardedMessage(MessageForwardEvent event) {
         logger.updateIndex("Forwarded messages", 1);
     }
-
-    /**
-     * 订阅消息接收 MEssageReceivedEvent 时间，该事件的类型为该函数的参数类型.
-     * 每接收到一个消息，就将其写入文件中保存
-     */
-    @Subscribe
-    public void onReceivedMessage(MessageReceivedEvent event) {
-        rLogger.log(event);
-    }
-
 }
