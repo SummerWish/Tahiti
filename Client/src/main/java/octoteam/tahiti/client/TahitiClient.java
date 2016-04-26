@@ -85,7 +85,7 @@ public class TahitiClient {
     }
 
     public ChannelFuture connectAsync() {
-        ChannelFuture connectFuture = bootstrap.connect(config.getString("chatService.host"), config.getInt("charService.port"));
+        ChannelFuture connectFuture = bootstrap.connect(config.getString("chatService.host"), config.getInt("chatService.port"));
         connectFuture.addListener(connFuture -> {
             if (!connectFuture.isSuccess()) {
                 eventBus.post(new ConnectErrorEvent());
