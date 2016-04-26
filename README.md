@@ -9,8 +9,9 @@
 [Quota Limiter 配额限制构件](https://github.com/SummerWish/TahitiQuotaLimiter)：限制每秒请求次数限制或限制总计请求次数
 
 ## Documentation
+[Component Function Extension Report 构件功能扩展文档](https://github.com/SummerWish/Tahiti/blob/master/doc/构件功能扩展文档.md)
 
-[Component Usage Report 构建使用文档](https://github.com/SummerWish/Tahiti/blob/master/doc/%E6%9E%84%E4%BB%B6%E4%BD%BF%E7%94%A8%E6%96%87%E6%A1%A3.md)
+[Component Usage Report 构件使用文档](https://github.com/SummerWish/Tahiti/blob/master/doc/%E6%9E%84%E4%BB%B6%E4%BD%BF%E7%94%A8%E6%96%87%E6%A1%A3.md)
 
 [Component Selection 构件选择文档](https://github.com/SummerWish/Tahiti/blob/master/doc/%E6%9E%84%E4%BB%B6%E9%80%89%E6%8B%A9%E6%96%87%E6%A1%A3.md)
 
