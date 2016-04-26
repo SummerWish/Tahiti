@@ -15,7 +15,6 @@ import octoteam.tahiti.protocol.SocketMessageProtos.Message.ServiceCode;
 import octoteam.tahiti.server.event.RateLimitExceededEvent;
 import octoteam.tahiti.server.pipeline.*;
 import octoteam.tahiti.server.service.AccountService;
-import octoteam.tahiti.shared.netty.pipeline.MessageReceivedHandler;
 import octoteam.tahiti.shared.netty.pipeline.UserEventToEventBusHandler;
 import wheellllll.config.Config;
 import wheellllll.license.License;

@@ -17,7 +17,6 @@ import octoteam.tahiti.client.pipeline.*;
 import octoteam.tahiti.protocol.SocketMessageProtos.ChatSendMessageReqBody;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
 import octoteam.tahiti.protocol.SocketMessageProtos.UserSignInReqBody;
-import octoteam.tahiti.shared.netty.pipeline.MessageReceivedHandler;
 import octoteam.tahiti.shared.netty.pipeline.UserEventToEventBusHandler;
 import wheellllll.config.Config;
 
