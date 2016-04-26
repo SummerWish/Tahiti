@@ -13,19 +13,19 @@ public class ReceivedMessageLogger {
      */
     private Logger logger;
 
-    private final static String file = "logs";
+    private final static String filename = "logs";
 
-    private final static String pattern = "%d - Received Message:%n%msg";
+    private final static String pattern = "%d - Received Message:%n%msg%n";
 
     public ReceivedMessageLogger() {
-        this(file);
+        this(filename);
     }
 
-    public ReceivedMessageLogger(String file) {
-        this(file, pattern);
+    public ReceivedMessageLogger(String filename) {
+        this(filename, pattern);
     }
 
-    public ReceivedMessageLogger(String file, String pattern) {
+    public ReceivedMessageLogger(String filename, String pattern) {
 
         LoggerContext context = new LoggerContext();
 
@@ -37,7 +37,7 @@ public class ReceivedMessageLogger {
 
         FileAppender fileAppender = new FileAppender();
         fileAppender.setContext(context);
-        fileAppender.setFile(file);
+        fileAppender.setFile(filename);
         fileAppender.setEncoder(encoder);
         fileAppender.start();
 
@@ -47,8 +47,6 @@ public class ReceivedMessageLogger {
     }
 
     public void log(MessageReceivedEvent event) {
-        synchronized (ReceivedMessageLogger.class) {
             logger.info(event.toString());
-        }
     }
 }
