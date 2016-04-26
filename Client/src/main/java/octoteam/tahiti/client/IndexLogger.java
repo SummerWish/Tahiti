@@ -16,7 +16,14 @@ class IndexLogger {
     private IntervalLogger logger;
     private final ReceivedMessageLogger rLogger;
 
-    IndexLogger(String logDir, String logFile, String archiveDir, String archiveFile, String messageFile) {
+    IndexLogger(
+            String logDir,
+            String logFile,
+            String messageDir,
+            String messageFile,
+            String archiveDir,
+            String archiveFile
+    ) {
         logger = new IntervalLogger();
         logger.setLogDir(logDir);
         logger.setLogPrefix(logFile);
@@ -36,7 +43,7 @@ class IndexLogger {
         logger.start();
         archiveManager.start();
 
-        rLogger = new ReceivedMessageLogger(logDir + "/" + messageFile);
+        rLogger = new ReceivedMessageLogger(messageDir + "/" + messageFile);
     }
 
     /**

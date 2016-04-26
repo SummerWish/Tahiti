@@ -23,11 +23,13 @@ class IndexLogger {
     private final ReceivedMessageLogger rLogger;
 
     IndexLogger(
+            String tahitiDir,
             String logDir,
             String logFile,
+            String messageDir,
+            String messageFile,
             String archiveDir,
-            String archiveFile,
-            String messageFile
+            String archiveFile
     ) {
         logger = new IntervalLogger();
         logger.setLogDir(logDir);
@@ -49,13 +51,13 @@ class IndexLogger {
         logger.start();
         archiveManager.start();
 
-        rLogger = new ReceivedMessageLogger(logDir + "/" + messageFile);
+        rLogger = new ReceivedMessageLogger(messageDir + "/" + messageFile);
 
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
         executorService.scheduleAtFixedRate(() -> {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
                     String date = sdf.format(new Date());
-                    ZipUtil.pack(new File(logDir), new File(archiveDir + "/tahiti_" + date + ".zip"));
+                    ZipUtil.pack(new File(tahitiDir), new File(archiveDir + "/tahiti_" + date + ".zip"));
                 },
                 120,
                 86400,

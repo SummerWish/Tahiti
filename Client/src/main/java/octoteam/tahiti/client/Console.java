@@ -26,9 +26,10 @@ public class Console {
         clientEventBus.register(new IndexLogger(
                 config.getString("log.logDir"),
                 config.getString("log.logFile"),
+                config.getString("log.messageDir"),
+                config.getString("log.messageFile"),
                 config.getString("log.archiveDir"),
-                config.getString("log.archiveFile"),
-                config.getString("log.messageFile")
+                config.getString("log.archiveFile")
         ));
 
         renderer.actionShowLoginDialog();

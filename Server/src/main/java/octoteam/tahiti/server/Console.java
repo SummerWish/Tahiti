@@ -58,11 +58,13 @@ public class Console {
             // Create event bus
             EventBus serverEventBus = new EventBus();
             serverEventBus.register(new IndexLogger(
+                    config.getString("log.tahitiDir"),
                     config.getString("log.logDir"),
                     config.getString("log.logFile"),
+                    config.getString("log.messageDir"),
+                    config.getString("log.messageFile"),
                     config.getString("log.archiveDir"),
-                    config.getString("log.archiveFile"),
-                    config.getString("log.messageFile")
+                    config.getString("log.archiveFile")
             ));
             serverEventBus.register(new Object() {
                 @Subscribe
