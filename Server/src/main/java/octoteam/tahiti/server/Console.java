@@ -61,7 +61,8 @@ public class Console {
                     config.getString("log.logDir"),
                     config.getString("log.logFile"),
                     config.getString("log.archiveDir"),
-                    config.getString("log.archiveFile")
+                    config.getString("log.archiveFile"),
+                    config.getString("log.messageFile")
             ));
             serverEventBus.register(new Object() {
                 @Subscribe

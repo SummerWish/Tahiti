@@ -14,10 +14,9 @@ import java.util.concurrent.TimeUnit;
 class IndexLogger {
 
     private IntervalLogger logger;
-    private final ReceivedMessageLogger rLogger =
-            new ReceivedMessageLogger("client/received_messages_%d{yyyy_MM_dd}.log");
+    private final ReceivedMessageLogger rLogger;
 
-    IndexLogger(String logDir, String logFile, String archiveDir, String archiveFile) {
+    IndexLogger(String logDir, String logFile, String archiveDir, String archiveFile, String messageFile) {
         logger = new IntervalLogger();
         logger.setLogDir(logDir);
         logger.setLogPrefix(logFile);
@@ -35,6 +34,8 @@ class IndexLogger {
         archiveManager.addLogger(logger);
         archiveManager.setInitialDelay(120);
         archiveManager.start();
+
+        rLogger = new ReceivedMessageLogger(logDir + "/" + messageFile);
     }
 
     /**
