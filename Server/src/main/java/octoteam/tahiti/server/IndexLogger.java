@@ -40,6 +40,7 @@ class IndexLogger {
         archiveManager.setInterval(86400, TimeUnit.SECONDS);
         archiveManager.addLogger(logger);
         archiveManager.setInitialDelay(120);
+        logger.start();
         archiveManager.start();
 
         rLogger = new ReceivedMessageLogger(logDir + "/" + messageFile);
