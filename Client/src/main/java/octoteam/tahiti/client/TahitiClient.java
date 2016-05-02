@@ -127,18 +127,19 @@ public class TahitiClient {
         return buildRequest(null);
     }
 
-    public void login(String username, String password, Function<Message, Void> callback) {
+    public void login(String username, String password, int groupNumber, Function<Message, Void> callback) {
         Message.Builder req = buildRequest(callback)
                 .setService(Message.ServiceCode.USER_SIGN_IN_REQUEST)
                 .setUserSignInReq(UserSignInReqBody.newBuilder()
                         .setUsername(username)
                         .setPassword(password)
+                        .setGroupNumber(groupNumber)
                 );
         channel.writeAndFlush(req.build());
     }
 
-    public void login(String username, String password) {
-        login(username, password, null);
+    public void login(String username, String password, int groupNumber) {
+        login(username, password, groupNumber, null);
     }
 
     public void sendMessage(String message, Function<Message, Void> callback) {

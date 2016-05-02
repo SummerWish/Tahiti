@@ -15,6 +15,7 @@ public class Reactor {
 
     private String loginUsername;
     private String loginPassword;
+    private int loginGroupNumber;
 
     public Reactor(TahitiClient client, Renderer renderer) {
         this.client = client;
@@ -22,7 +23,7 @@ public class Reactor {
     }
 
     void login() {
-        client.login(loginUsername, loginPassword, msg -> {
+        client.login(loginUsername, loginPassword, loginGroupNumber, msg -> {
             renderer.actionHideLoginStateDialog();
             if (msg.getStatus() == Message.StatusCode.PASSWORD_INCORRECT) {
                 renderer.actionShowMessageDialog("Login failed", "Incorrect password");
@@ -45,7 +46,7 @@ public class Reactor {
     public void onSessionExpired(SessionExpiredEvent event) {
         renderer.actionAppendNotice("Session expired. You are logged out.");
         if (event.getReason() == SessionExpiredPushBody.Reason.EXPIRED) {
-            client.login(loginUsername, loginPassword);
+            client.login(loginUsername, loginPassword, loginGroupNumber);
         }
     }
 
@@ -101,6 +102,8 @@ public class Reactor {
         try {
             loginUsername = event.getUsername();
             loginPassword = event.getPassword();
+            loginGroupNumber = event.getGroupNumber();
+
             if (client.isConnected()) {
                 login();
             } else {

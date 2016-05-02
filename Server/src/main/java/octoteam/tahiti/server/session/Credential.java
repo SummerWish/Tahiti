@@ -19,6 +19,11 @@ public class Credential {
     private String username;
 
     /**
+     * 用户分组
+     */
+    private int groupNumber;
+
+    /**
      * 用户
      */
     private Account account;
@@ -46,12 +51,14 @@ public class Credential {
      * 由 Account Model 构造一个标记为已登录的认证信息
      *
      * @param account 用户
+     * @param groupNumber 用户分组
      */
-    public Credential(Account account) {
+    public Credential(Account account, int groupNumber) {
         this.UID = account.getId();
         this.username = account.getUsername();
         this.account = account;
         this.authenticated = true;
+        this.groupNumber = groupNumber;
     }
 
     public int getUID() {
@@ -64,6 +71,10 @@ public class Credential {
 
     public Account getAccount() {
         return account;
+    }
+
+    public int getGroupNumber() {
+        return groupNumber;
     }
 
     /**

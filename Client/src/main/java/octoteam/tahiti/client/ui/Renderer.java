@@ -70,10 +70,15 @@ public class Renderer {
         panel.addComponent(new Label("Password"));
         TextBox txtPassword = new TextBox().setMask('*').addTo(panel);
 
+        panel.addComponent(new Label("Group Number"));
+        TextBox groupNumber = new TextBox().addTo(panel);
+
         panel.addComponent(new EmptySpace(new TerminalSize(0, 0)));
 
         new Button("Login", () -> {
-            eventBus.post(new UIOnLoginCommandEvent(txtUsername.getText(), txtPassword.getText()));
+            eventBus.post(new UIOnLoginCommandEvent(txtUsername.getText(),
+                    txtPassword.getText(),
+                    Integer.parseInt(groupNumber.getText())));
         }).addTo(panel);
 
         BasicWindow dialog = new BasicWindow("Login to Tahiti");

@@ -67,6 +67,7 @@ message PingPongBody {
 message UserSignInReqBody {
   string username               = 1;
   string password               = 2;
+  uint32 groupNumber            = 3;
 }
 
 message UserSignInRespBody {

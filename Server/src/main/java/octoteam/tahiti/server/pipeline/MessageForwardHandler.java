@@ -12,6 +12,9 @@ import octoteam.tahiti.server.session.Credential;
 import octoteam.tahiti.server.session.PipelineHelper;
 import octoteam.tahiti.shared.netty.MessageHandler;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.zip.GZIPOutputStream;
+
 /**
  * messageReceived负责群发消息，channelActive收集所有的客户端链接。
  */
@@ -23,10 +26,12 @@ public class MessageForwardHandler extends MessageHandler {
      */
     private final static ChannelGroup clients = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
+    private final static ConcurrentHashMap<Integer, ChannelGroup> clientGroups = new ConcurrentHashMap<>();
+
     @Override
     protected void messageReceived(ChannelHandlerContext ctx, Message msg) {
+        Credential currentCredential = (Credential) PipelineHelper.getSession(ctx.channel()).get("credential");
         if (msg.getService() == Message.ServiceCode.CHAT_SEND_MESSAGE_REQUEST) {
-            Credential currentCredential = (Credential) PipelineHelper.getSession(ctx).get("credential");
             if (currentCredential == null) {
                 currentCredential = Credential.getGuestCredential();
             }
@@ -40,8 +45,20 @@ public class MessageForwardHandler extends MessageHandler {
                             .setSenderUID(currentCredential.getUID())
                             .setSenderUsername(currentCredential.getUsername())
                     );
-            clients.writeAndFlush(resp.build(), channel -> channel != ctx.channel());
+            ChannelGroup currentGroup = clientGroups.get(currentCredential.getGroupNumber());
+            currentGroup.writeAndFlush(resp.build(), channel -> channel != ctx.channel());
             ctx.fireUserEventTriggered(new MessageForwardEvent(msg));
+        }
+        if (msg.getService() == Message.ServiceCode.USER_SIGN_IN_REQUEST) {
+            int groupNumber = currentCredential.getGroupNumber();
+            ChannelGroup group = clientGroups.get(groupNumber);
+            if (group == null) {
+                group = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+                group.add(ctx.channel());
+                clientGroups.put(groupNumber, group);
+            } else {
+                group.add(ctx.channel());
+            }
         }
         ctx.fireChannelRead(msg);
     }
