@@ -11,6 +11,7 @@ import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
+import octoteam.tahiti.client.event.UIOnGroupCommandEvent;
 import octoteam.tahiti.client.event.UIOnLoginCommandEvent;
 import octoteam.tahiti.client.event.UIOnSendCommandEvent;
 
@@ -70,15 +71,11 @@ public class Renderer {
         panel.addComponent(new Label("Password"));
         TextBox txtPassword = new TextBox().setMask('*').addTo(panel);
 
-        panel.addComponent(new Label("Group Number"));
-        TextBox groupNumber = new TextBox().addTo(panel);
-
         panel.addComponent(new EmptySpace(new TerminalSize(0, 0)));
 
         new Button("Login", () -> {
             eventBus.post(new UIOnLoginCommandEvent(txtUsername.getText(),
-                    txtPassword.getText(),
-                    Integer.parseInt(groupNumber.getText())));
+                    txtPassword.getText()));
         }).addTo(panel);
 
         BasicWindow dialog = new BasicWindow("Login to Tahiti");
@@ -157,6 +154,17 @@ public class Renderer {
 
         new Button("Send", () -> {
             eventBus.post(new UIOnSendCommandEvent(msg.getText()));
+            msg
+                    .setText("")
+                    .takeFocus();
+        }).addTo(msgPanel);
+
+        TextBox grouping = new TextBox()
+                .setLayoutData(GridLayout.createHorizontallyFilledLayoutData(1))
+                .addTo(panel);
+
+        new Button("Join/Leave", () -> {
+            eventBus.post(new UIOnGroupCommandEvent(grouping.getText()));
             msg
                     .setText("")
                     .takeFocus();

@@ -16,6 +16,7 @@ import octoteam.tahiti.client.event.DisconnectedEvent;
 import octoteam.tahiti.client.pipeline.*;
 import octoteam.tahiti.protocol.SocketMessageProtos.ChatSendMessageReqBody;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
+import octoteam.tahiti.protocol.SocketMessageProtos.UserGroupingReqBody;
 import octoteam.tahiti.protocol.SocketMessageProtos.UserSignInReqBody;
 import octoteam.tahiti.shared.netty.pipeline.UserEventToEventBusHandler;
 import wheellllll.config.Config;
@@ -127,19 +128,18 @@ public class TahitiClient {
         return buildRequest(null);
     }
 
-    public void login(String username, String password, int groupNumber, Function<Message, Void> callback) {
+    public void login(String username, String password, Function<Message, Void> callback) {
         Message.Builder req = buildRequest(callback)
                 .setService(Message.ServiceCode.USER_SIGN_IN_REQUEST)
                 .setUserSignInReq(UserSignInReqBody.newBuilder()
                         .setUsername(username)
                         .setPassword(password)
-                        .setGroupNumber(groupNumber)
                 );
         channel.writeAndFlush(req.build());
     }
 
-    public void login(String username, String password, int groupNumber) {
-        login(username, password, groupNumber, null);
+    public void login(String username, String password) {
+        login(username, password, null);
     }
 
     public void sendMessage(String message, Function<Message, Void> callback) {
@@ -151,6 +151,17 @@ public class TahitiClient {
                 );
         Message msg = req.build();
         channel.writeAndFlush(msg);
+    }
+
+    public void sendGroupCommand(UserGroupingReqBody.Action action, String groupId, Function<Message, Void> callback) {
+        Message.Builder req = buildRequest(callback)
+                .setService(Message.ServiceCode.USER_GROUPING_REQUEST)
+                .setUserGroupingReq(UserGroupingReqBody.newBuilder()
+                        .setAction(action)
+                        .setGroupId(groupId)
+                );
+        Message groupMsg = req.build();
+        channel.writeAndFlush(groupMsg);
     }
 
     public void sendMessage(String message) {

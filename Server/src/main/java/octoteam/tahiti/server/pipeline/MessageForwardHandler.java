@@ -5,15 +5,16 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.util.concurrent.GlobalEventExecutor;
+import octoteam.tahiti.protocol.SocketMessageProtos.UserGroupingReqBody.Action;
 import octoteam.tahiti.protocol.SocketMessageProtos.ChatBroadcastPushBody;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
 import octoteam.tahiti.server.event.MessageForwardEvent;
 import octoteam.tahiti.server.session.Credential;
 import octoteam.tahiti.server.session.PipelineHelper;
 import octoteam.tahiti.shared.netty.MessageHandler;
+import octoteam.tahiti.shared.protocol.ProtocolUtil;
 
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.zip.GZIPOutputStream;
 
 /**
  * messageReceived负责群发消息，channelActive收集所有的客户端链接。
@@ -26,12 +27,12 @@ public class MessageForwardHandler extends MessageHandler {
      */
     private final static ChannelGroup clients = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
-    private final static ConcurrentHashMap<Integer, ChannelGroup> clientGroups = new ConcurrentHashMap<>();
+    private final static ConcurrentHashMap<String, ChannelGroup> clientGroups = new ConcurrentHashMap<>();
 
     @Override
     protected void messageReceived(ChannelHandlerContext ctx, Message msg) {
-        Credential currentCredential = (Credential) PipelineHelper.getSession(ctx.channel()).get("credential");
         if (msg.getService() == Message.ServiceCode.CHAT_SEND_MESSAGE_REQUEST) {
+            Credential currentCredential = (Credential) PipelineHelper.getSession(ctx.channel()).get("credential");
             if (currentCredential == null) {
                 currentCredential = Credential.getGuestCredential();
             }
@@ -45,20 +46,32 @@ public class MessageForwardHandler extends MessageHandler {
                             .setSenderUID(currentCredential.getUID())
                             .setSenderUsername(currentCredential.getUsername())
                     );
-            ChannelGroup currentGroup = clientGroups.get(currentCredential.getGroupNumber());
+            String groupId = (String) PipelineHelper.getSession(ctx.channel()).get("groupId");
+            ChannelGroup currentGroup = clientGroups.get(groupId);
             currentGroup.writeAndFlush(resp.build(), channel -> channel != ctx.channel());
             ctx.fireUserEventTriggered(new MessageForwardEvent(msg));
         }
-        if (msg.getService() == Message.ServiceCode.USER_SIGN_IN_REQUEST) {
-            int groupNumber = currentCredential.getGroupNumber();
-            ChannelGroup group = clientGroups.get(groupNumber);
-            if (group == null) {
-                group = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-                group.add(ctx.channel());
-                clientGroups.put(groupNumber, group);
+        if (msg.getService() == Message.ServiceCode.USER_GROUPING_REQUEST) {
+            String groupId = msg.getUserGroupingReq().getGroupId();
+            ChannelGroup group = clientGroups.get(groupId);
+            boolean status;
+            if (msg.getUserGroupingReq().getAction() == Action.JOIN) {
+                PipelineHelper.getSession(ctx.channel()).put("groupId", groupId);
+                if (group == null) {
+                    group = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+                    status = group.add(ctx.channel());
+                    clientGroups.put(groupId, group);
+                } else {
+                    status = group.add(ctx.channel());
+                }
             } else {
-                group.add(ctx.channel());
+                status = group != null && group.remove(ctx.channel());
             }
+            Message resp = ProtocolUtil.
+                    buildResponse(msg)
+                    .setStatus(status ? Message.StatusCode.SUCCESS : Message.StatusCode.FAIL)
+                    .build();
+            ctx.channel().writeAndFlush(resp);
         }
         ctx.fireChannelRead(msg);
     }

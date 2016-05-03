@@ -46,7 +46,7 @@ public class AuthRequestHandler extends MessageHandler {
         try {
             Account account = accountService.getMatchedAccount(body.getUsername(), body.getPassword());
             PipelineHelper.clearSession(ctx);
-            PipelineHelper.getSession(ctx).put("credential", new Credential(account, body.getGroupNumber()));
+            PipelineHelper.getSession(ctx).put("credential", new Credential(account));
             resp
                     .setStatus(Message.StatusCode.SUCCESS)
                     .setUserSignInResp(UserSignInRespBody

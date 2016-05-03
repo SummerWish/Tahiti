@@ -15,7 +15,6 @@ public class Reactor {
 
     private String loginUsername;
     private String loginPassword;
-    private int loginGroupNumber;
 
     public Reactor(TahitiClient client, Renderer renderer) {
         this.client = client;
@@ -23,7 +22,7 @@ public class Reactor {
     }
 
     void login() {
-        client.login(loginUsername, loginPassword, loginGroupNumber, msg -> {
+        client.login(loginUsername, loginPassword, msg -> {
             renderer.actionHideLoginStateDialog();
             if (msg.getStatus() == Message.StatusCode.PASSWORD_INCORRECT) {
                 renderer.actionShowMessageDialog("Login failed", "Incorrect password");
@@ -46,7 +45,7 @@ public class Reactor {
     public void onSessionExpired(SessionExpiredEvent event) {
         renderer.actionAppendNotice("Session expired. You are logged out.");
         if (event.getReason() == SessionExpiredPushBody.Reason.EXPIRED) {
-            client.login(loginUsername, loginPassword, loginGroupNumber);
+            client.login(loginUsername, loginPassword);
         }
     }
 
@@ -102,7 +101,6 @@ public class Reactor {
         try {
             loginUsername = event.getUsername();
             loginPassword = event.getPassword();
-            loginGroupNumber = event.getGroupNumber();
 
             if (client.isConnected()) {
                 login();
@@ -130,6 +128,22 @@ public class Reactor {
                         StringUtils.abbreviate(event.getPayload(), 20),
                         msg.getStatus().toString()
                 ));
+            }
+            return null;
+        });
+    }
+
+    @Subscribe
+    public void onClickGroup(UIOnGroupCommandEvent event) {
+        client.sendGroupCommand(event.getAction(), event.getGroupId(), msg -> {
+            if (msg.getStatus() != Message.StatusCode.SUCCESS) {
+                renderer.actionAppendNotice(String.format(
+                        "Failed to deliver \"%s\"\nReason: %s",
+                        StringUtils.abbreviate(event.getAction() + " " + event.getGroupId(), 20),
+                        msg.getStatus().toString()
+                ));
+            } else {
+                renderer.actionAppendNotice("You are now in Group: " + event.getGroupId());
             }
             return null;
         });
