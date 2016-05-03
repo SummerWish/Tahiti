@@ -161,11 +161,11 @@ public class Renderer {
 
         TextBox grouping = new TextBox()
                 .setLayoutData(GridLayout.createHorizontallyFilledLayoutData(1))
-                .addTo(panel);
+                .addTo(msgPanel);
 
         new Button("Join/Leave", () -> {
             eventBus.post(new UIOnGroupCommandEvent(grouping.getText()));
-            msg
+            grouping
                     .setText("")
                     .takeFocus();
         }).addTo(msgPanel);
