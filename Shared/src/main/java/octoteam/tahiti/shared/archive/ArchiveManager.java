@@ -1,6 +1,5 @@
-package octoteam.tahiti.server;
+package octoteam.tahiti.shared.archive;
 
-import octoteam.tahiti.shared.logger.ReceivedMessageLogger;
 import org.zeroturnaround.zip.ZipUtil;
 import org.zeroturnaround.zip.commons.FileUtils;
 
@@ -13,11 +12,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class ServerReceivedMessageLogger extends ReceivedMessageLogger{
-
-    public ServerReceivedMessageLogger(String messageDirFile, String messageZipFile) {
-        super(messageDirFile, messageZipFile);
-
+public class ArchiveManager {
+    public static void archive() {
         ScheduledExecutorService dailyArchiveService = Executors.newScheduledThreadPool(1);
         dailyArchiveService.scheduleAtFixedRate(() -> {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");

@@ -9,7 +9,9 @@ import octoteam.tahiti.server.repository.AccountRepository;
 import octoteam.tahiti.server.repository.DatabaseAccountRepository;
 import octoteam.tahiti.server.service.AccountService;
 import octoteam.tahiti.server.service.DefaultAccountService;
+import octoteam.tahiti.shared.archive.ArchiveManager;
 import octoteam.tahiti.shared.event.BaseEvent;
+import octoteam.tahiti.shared.logger.ReceivedMessageLogger;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -54,7 +56,6 @@ public class Console {
             connectionSource.close();
 
         } else {
-
             // Create event bus
             EventBus serverEventBus = new EventBus();
             serverEventBus.register(new IndexLogger(
@@ -63,10 +64,11 @@ public class Console {
                     config.getString("log.archiveDir"),
                     config.getString("log.archiveFile")
             ));
-            serverEventBus.register(new ServerReceivedMessageLogger(
+            serverEventBus.register(new ReceivedMessageLogger(
                     config.getString("log.messageDirFile"),
                     config.getString("log.messageZipFile")
             ));
+            ArchiveManager.archive();
             serverEventBus.register(new Object() {
                 @Subscribe
                 public void listenAllEvent(BaseEvent event) {
