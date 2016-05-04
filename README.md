@@ -125,3 +125,12 @@ java -jar Server/target/tahiti.server-1.0-SNAPSHOT-jar-with-dependencies.jar
 java -jar Server/target/tahiti.server-1.0-SNAPSHOT-jar-with-dependencies.jar \
 --username foo --password bar --add
 ```
+## Grouping
+Type the following command and hit Join/Leave button for grouping
+```bash
+# Join group
+join groupId
+
+# Leave group
+leave groupId
+```
