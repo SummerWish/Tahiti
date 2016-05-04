@@ -4,12 +4,12 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
+import octoteam.tahiti.archiver.RollingArchivePacker;
 import octoteam.tahiti.server.model.Account;
 import octoteam.tahiti.server.repository.AccountRepository;
 import octoteam.tahiti.server.repository.DatabaseAccountRepository;
 import octoteam.tahiti.server.service.AccountService;
 import octoteam.tahiti.server.service.DefaultAccountService;
-import octoteam.tahiti.shared.archive.ArchiveManager;
 import octoteam.tahiti.shared.event.BaseEvent;
 import octoteam.tahiti.shared.logger.ReceivedMessageLogger;
 import org.apache.commons.cli.CommandLine;
@@ -65,16 +65,29 @@ public class Console {
                     config.getString("log.archiveFile")
             ));
             serverEventBus.register(new ReceivedMessageLogger(
-                    config.getString("log.messageDirFile"),
-                    config.getString("log.messageZipFile")
+                    config.getString("log.messageDirFile")
             ));
-            ArchiveManager.archive();
             serverEventBus.register(new Object() {
                 @Subscribe
                 public void listenAllEvent(BaseEvent event) {
                     System.out.println(event);
                 }
             });
+
+            // Start daily packing
+            String[] dailySourceFilePatterns = new String[]{
+                    config.getString("log.archiveDir") + "/" + config.getString("log.archiveFile") + "%d{yyyy_MM_dd}.zip",
+                    config.getString("log.archiveDir") + "/" + "tahiti_client_%d{yyyy_MM_dd}.zip",
+                    config.getString("log.messageDirFile"),
+                    "resource/tahiti/message/client_message_%d{yyyy_MM_dd}.log"
+            };
+            String dailyDestFilePattern = config.getString("log.dailyPackDestPattern");
+            new RollingArchivePacker(dailySourceFilePatterns, dailyDestFilePattern).start();
+
+            // Start weekly packing
+            String[] weeklySourceFilePatterns = new String[]{dailyDestFilePattern};
+            String weeklyDestFilePattern = config.getString("log.weeklyPackDestPattern");
+            new RollingArchivePacker(weeklySourceFilePatterns, weeklyDestFilePattern).start();
 
             // Create server
             TahitiServer server = new TahitiServer(config, serverEventBus, accountService);

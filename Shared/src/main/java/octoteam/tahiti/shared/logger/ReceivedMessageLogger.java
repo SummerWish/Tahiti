@@ -15,26 +15,19 @@ public class ReceivedMessageLogger {
      */
     private Logger txtLogger;
 
-    /**
-     * 日志归档生成器
-     */
-    private Logger zipLogger;
-
     private final static String txtFileNamePattern = "received_messages_%d{yyyy_MM_dd}.log";
-
-    private final static String zipFileNamePattern = "received_message_%d{yyyy_MM_dd}.zip";
 
     private final static String pattern = "%d - Received Message:%n%msg%n%n";
 
     public ReceivedMessageLogger() {
-        this(txtFileNamePattern, zipFileNamePattern);
+        this(txtFileNamePattern);
     }
 
-    public ReceivedMessageLogger(String txtFileNamePattern, String zipFileNamePattern) {
-        this(txtFileNamePattern, zipFileNamePattern, pattern);
+    public ReceivedMessageLogger(String txtFileNamePattern) {
+        this(txtFileNamePattern, pattern);
     }
 
-    public ReceivedMessageLogger(String txtFileNamePattern, String zipFileNamePattern, String pattern) {
+    public ReceivedMessageLogger(String txtFileNamePattern, String pattern) {
 
         LoggerContext context = new LoggerContext();
 
@@ -65,22 +58,6 @@ public class ReceivedMessageLogger {
         txtLogger = context.getLogger(ReceivedMessageLogger.class);
         txtLogger.setAdditive(false);
         txtLogger.addAppender(txtFileAppender);
-
-        // init zip logger
-        RollingFileAppender zipFileAppender = getAppender(context, pattern);
-        TimeBasedRollingPolicy zipPolicy = new TimeBasedRollingPolicy();
-        zipPolicy.setContext(context);
-        zipPolicy.setParent(zipFileAppender);
-        zipPolicy.setFileNamePattern(zipFileNamePattern);
-
-        zipFileAppender.setRollingPolicy(zipPolicy);
-
-        zipPolicy.start();
-        zipFileAppender.start();
-
-        zipLogger = context.getLogger(ReceivedMessageLogger.class);
-        zipLogger.setAdditive(false);
-        zipLogger.addAppender(zipFileAppender);
     }
 
     private RollingFileAppender getAppender(LoggerContext loggerContext, String pattern) {
@@ -102,6 +79,5 @@ public class ReceivedMessageLogger {
     @Subscribe
     public void log(MessageReceivedEvent event) {
         txtLogger.info(event.toString());
-        zipLogger.info(event.toString());
     }
 }
