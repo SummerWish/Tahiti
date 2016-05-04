@@ -64,9 +64,8 @@ public class Console {
                     config.getString("log.archiveFile")
             ));
             serverEventBus.register(new ServerReceivedMessageLogger(
-                    config.getString("log.tahitiDir"),
                     config.getString("log.messageDirFile"),
-                    config.getString("log.archiveDir")
+                    config.getString("log.messageZipFile")
             ));
             serverEventBus.register(new Object() {
                 @Subscribe

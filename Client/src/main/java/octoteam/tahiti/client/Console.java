@@ -31,7 +31,8 @@ public class Console {
                 config.getString("log.archiveFile")
         ));
         clientEventBus.register(new ReceivedMessageLogger(
-                config.getString("log.messageDirFile")
+                config.getString("log.messageDirFile"),
+                config.getString("log.messageZipFile")
         ));
 
         renderer.actionShowLoginDialog();
