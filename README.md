@@ -15,7 +15,9 @@
 
 [Component Selection 构件选择文档](https://github.com/SummerWish/Tahiti/blob/master/doc/%E6%9E%84%E4%BB%B6%E9%80%89%E6%8B%A9%E6%96%87%E6%A1%A3.md)
 
-[Discussion Solutions 讨论课解决方案](https://github.com/SummerWish/Tahiti/tree/master/doc/discussion_1)
+[Discussion Solutions 讨论课解决方案_1](https://github.com/SummerWish/Tahiti/tree/master/doc/discussion_1)
+
+[Discussion Solutions 讨论课解决方案_2](https://github.com/SummerWish/Tahiti/tree/master/doc/discussion_2)
 
 [API Documentation 程序文档](https://summerwish.github.io/Tahiti/)
 
