@@ -74,6 +74,9 @@ public class Console {
                 }
             });
 
+            // Initialize AES Encryptor
+            Encryptor myEncryptor = new Encryptor(config.getString("archive.cipher"));
+
             // Start daily packing
             String[] dailySourceFilePatterns = new String[]{
                     config.getString("log.archiveDir") + "/" + config.getString("log.archiveFile") + "%d{yyyy_MM_dd}.zip",
