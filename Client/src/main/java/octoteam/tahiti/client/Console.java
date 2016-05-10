@@ -31,6 +31,8 @@ public class Console {
                 config.getString("log.archiveFile")
         ));
         clientEventBus.register(new ReceivedMessageLogger(
+                config.getString("log.messageMaxFileSize"),
+                config.getString("log.messageTotalSizeCap"),
                 config.getString("log.messageDirFile")
         ));
 

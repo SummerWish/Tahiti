@@ -1,5 +1,7 @@
 package octoteam.tahiti.shared.logger;
 
+import ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy;
+import ch.qos.logback.core.util.FileSize;
 import com.google.common.eventbus.Subscribe;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
@@ -15,40 +17,34 @@ public class ReceivedMessageLogger {
      */
     private Logger txtLogger;
 
-    private final static String txtFileNamePattern = "received_messages_%d{yyyy_MM_dd}.log";
+    private final static String maxFileSize = "100MB";
+
+    private final static String totalSizeCap = "10GB";
+
+    private final static String txtFileNamePattern = "received_messages_%d{yyyy_MM_dd}.%i.log";
 
     private final static String pattern = "%d - Received Message:%n%msg%n%n";
 
     public ReceivedMessageLogger() {
-        this(txtFileNamePattern);
+        this(maxFileSize, totalSizeCap, txtFileNamePattern);
     }
 
-    public ReceivedMessageLogger(String txtFileNamePattern) {
-        this(txtFileNamePattern, pattern);
+    public ReceivedMessageLogger(String maxFileSize, String totalSizeCap, String txtFileNamePattern) {
+        this(maxFileSize, totalSizeCap, txtFileNamePattern, pattern);
     }
 
-    public ReceivedMessageLogger(String txtFileNamePattern, String pattern) {
+    public ReceivedMessageLogger(String maxFileSize, String totalSizeCap, String txtFileNamePattern, String pattern) {
 
         LoggerContext context = new LoggerContext();
 
-        // init encoder
-//        PatternLayoutEncoder encoder = new PatternLayoutEncoder();
-//        encoder.setContext(context);
-//        encoder.setImmediateFlush(true);
-//        encoder.setPattern(pattern);
-//        encoder.start();
-
-        // init fileAppender
-//        RollingFileAppender fileAppender = new RollingFileAppender();
-//        fileAppender.setContext(context);
-//        fileAppender.setEncoder(encoder);
-
         // init txt logger
         RollingFileAppender txtFileAppender = getAppender(context, pattern);
-        TimeBasedRollingPolicy txtPolicy = new TimeBasedRollingPolicy();
+        SizeAndTimeBasedRollingPolicy txtPolicy = new SizeAndTimeBasedRollingPolicy();
         txtPolicy.setContext(context);
         txtPolicy.setParent(txtFileAppender);
         txtPolicy.setFileNamePattern(txtFileNamePattern);
+        txtPolicy.setMaxFileSize(maxFileSize);
+        txtPolicy.setTotalSizeCap(FileSize.valueOf(totalSizeCap));
 
         txtFileAppender.setRollingPolicy(txtPolicy);
 

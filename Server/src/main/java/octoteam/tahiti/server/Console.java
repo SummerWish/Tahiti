@@ -65,6 +65,8 @@ public class Console {
                     config.getString("log.archiveFile")
             ));
             serverEventBus.register(new ReceivedMessageLogger(
+                    config.getString("log.messageMaxFileSize"),
+                    config.getString("log.messageTotalSizeCap"),
                     config.getString("log.messageDirFile")
             ));
             serverEventBus.register(new Object() {
