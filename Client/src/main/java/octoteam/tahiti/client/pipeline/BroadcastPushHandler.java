@@ -4,6 +4,7 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import octoteam.tahiti.client.event.ChatMessageEvent;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
+import octoteam.tahiti.shared.netty.ExtendedContext;
 import octoteam.tahiti.shared.netty.MessageHandler;
 
 /**
@@ -13,14 +14,20 @@ import octoteam.tahiti.shared.netty.MessageHandler;
 @ChannelHandler.Sharable
 public class BroadcastPushHandler extends MessageHandler {
 
+    public BroadcastPushHandler(ExtendedContext extendedContext) {
+        super(extendedContext);
+    }
+
     @Override
     protected void messageReceived(ChannelHandlerContext ctx, Message msg) {
         if (msg.getService() == Message.ServiceCode.CHAT_BROADCAST_PUSH) {
+            /*
             ctx.fireUserEventTriggered(new ChatMessageEvent(
                     msg.getChatBroadcastPush().getPayload(),
                     msg.getChatBroadcastPush().getSenderUsername(),
                     msg.getChatBroadcastPush().getTimestamp()
-            ));
+            ));*/
+            // TODO: send sync
         }
         ctx.fireChannelRead(msg);
     }

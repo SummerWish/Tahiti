@@ -3,9 +3,15 @@ package octoteam.tahiti.client.pipeline;
 import io.netty.channel.ChannelHandlerContext;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
 import octoteam.tahiti.shared.event.MessageReceivedEvent;
+import octoteam.tahiti.shared.netty.ExtendedContext;
 import octoteam.tahiti.shared.netty.MessageHandler;
 
 public class MessageReceivedHandler extends MessageHandler {
+
+    public MessageReceivedHandler(ExtendedContext extendedContext) {
+        super(extendedContext);
+    }
+
     @Override
     protected void messageReceived(ChannelHandlerContext ctx, Message msg) throws Exception {
         if (msg.getService() == Message.ServiceCode.CHAT_BROADCAST_PUSH) {
@@ -13,4 +19,5 @@ public class MessageReceivedHandler extends MessageHandler {
         }
         ctx.fireChannelRead(msg);
     }
+
 }

@@ -3,6 +3,7 @@ package octoteam.tahiti.client.pipeline;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
+import octoteam.tahiti.shared.netty.ExtendedContext;
 import octoteam.tahiti.shared.netty.MessageHandler;
 import octoteam.tahiti.shared.protocol.ProtocolUtil;
 
@@ -11,6 +12,10 @@ import octoteam.tahiti.shared.protocol.ProtocolUtil;
  */
 @ChannelHandler.Sharable
 public class HeartbeatPushHandler extends MessageHandler {
+
+    public HeartbeatPushHandler(ExtendedContext extendedContext) {
+        super(extendedContext);
+    }
 
     @Override
     protected void messageReceived(ChannelHandlerContext ctx, Message msg) {

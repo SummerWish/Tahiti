@@ -17,9 +17,15 @@ public class UIOnLoginCommandEvent extends UIEvent {
      */
     private String password;
 
-    public UIOnLoginCommandEvent(String username, String password) {
+    /**
+     * 填写的组名
+     */
+    private String group;
+
+    public UIOnLoginCommandEvent(String username, String password, String group) {
         this.username = username;
         this.password = password;
+        this.group = group;
     }
 
     public String getUsername() {
@@ -38,12 +44,20 @@ public class UIOnLoginCommandEvent extends UIEvent {
         this.password = password;
     }
 
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
+
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("username", username)
                 .add("password", password)
+                .add("group", group)
                 .toString();
     }
-
 }

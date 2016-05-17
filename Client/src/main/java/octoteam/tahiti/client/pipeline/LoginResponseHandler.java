@@ -4,6 +4,7 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import octoteam.tahiti.client.event.LoginAttemptEvent;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
+import octoteam.tahiti.shared.netty.ExtendedContext;
 import octoteam.tahiti.shared.netty.MessageHandler;
 
 /**
@@ -12,6 +13,10 @@ import octoteam.tahiti.shared.netty.MessageHandler;
  */
 @ChannelHandler.Sharable
 public class LoginResponseHandler extends MessageHandler {
+
+    public LoginResponseHandler(ExtendedContext extendedContext) {
+        super(extendedContext);
+    }
 
     @Override
     protected void messageReceived(ChannelHandlerContext ctx, Message msg) {

@@ -14,10 +14,8 @@ import octoteam.tahiti.client.event.ConnectErrorEvent;
 import octoteam.tahiti.client.event.ConnectedEvent;
 import octoteam.tahiti.client.event.DisconnectedEvent;
 import octoteam.tahiti.client.pipeline.*;
-import octoteam.tahiti.protocol.SocketMessageProtos.ChatPublishReqBody;
-import octoteam.tahiti.protocol.SocketMessageProtos.Message;
-import octoteam.tahiti.protocol.SocketMessageProtos.UserGroupingReqBody;
-import octoteam.tahiti.protocol.SocketMessageProtos.UserSignInReqBody;
+import octoteam.tahiti.protocol.SocketMessageProtos.*;
+import octoteam.tahiti.shared.netty.ExtendedContext;
 import octoteam.tahiti.shared.netty.pipeline.UserEventToEventBusHandler;
 import wheellllll.config.Config;
 
@@ -36,6 +34,8 @@ public class TahitiClient {
     private volatile Bootstrap bootstrap;
 
     private volatile Channel channel;
+
+    private final ExtendedContext extendedContext = new ExtendedContext();
 
     public TahitiClient(Config config, EventBus eventBus) {
         this.config = config;
@@ -65,13 +65,13 @@ public class TahitiClient {
                                 .addLast(new ProtobufEncoder())
                                 .addLast(new ProtobufVarint32FrameDecoder())
                                 .addLast(new ProtobufDecoder(Message.getDefaultInstance()))
-                                .addLast(new MessageReceivedHandler())
-                                .addLast(new HeartbeatPushHandler())
-                                .addLast(new ResponseCallbackHandler(callbackRepo))
-                                .addLast(new LoginResponseHandler())
-                                .addLast(new SessionExpiredPushHandler())
-                                .addLast(new BroadcastPushHandler())
-                                .addLast(new SendMessageFilterHandler())
+                                .addLast(new MessageReceivedHandler(extendedContext))
+                                .addLast(new HeartbeatPushHandler(extendedContext))
+                                .addLast(new ResponseCallbackHandler(extendedContext, callbackRepo))
+                                .addLast(new LoginResponseHandler(extendedContext))
+                                .addLast(new SessionExpiredPushHandler(extendedContext))
+                                .addLast(new BroadcastPushHandler(extendedContext))
+                                .addLast(new SendMessageFilterHandler(extendedContext))
                                 .addLast(new UserEventToEventBusHandler(eventBus))
                         ;
                     }
@@ -153,6 +153,26 @@ public class TahitiClient {
         channel.writeAndFlush(msg);
     }
 
+    public void sendMessage(String message) {
+        sendMessage(message, null);
+    }
+
+    public void joinGroup(String group, Function<Message, Void> callback) {
+        Message.Builder req = buildRequest(callback)
+                .setService(Message.ServiceCode.GROUP_REQUEST)
+                .setGroupReq(GroupReqBody.newBuilder()
+                        .setOp(GroupOperation.JOIN)
+                        .setGroupId(group)
+                );
+        Message msg = req.build();
+        channel.writeAndFlush(msg);
+    }
+
+    public void joinGroup(String group) {
+        joinGroup(group, null);
+    }
+
+    /*
     public void sendGroupCommand(UserGroupingReqBody.Action action, String groupId, Function<Message, Void> callback) {
         Message.Builder req = buildRequest(callback)
                 .setService(Message.ServiceCode.USER_GROUPING_REQUEST)
@@ -163,9 +183,6 @@ public class TahitiClient {
         Message groupMsg = req.build();
         channel.writeAndFlush(groupMsg);
     }
-
-    public void sendMessage(String message) {
-        sendMessage(message, null);
-    }
+    */
 
 }

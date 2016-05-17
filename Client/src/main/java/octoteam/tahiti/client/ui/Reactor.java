@@ -15,6 +15,7 @@ public class Reactor {
 
     private String loginUsername;
     private String loginPassword;
+    private String groupToJoin;
 
     public Reactor(TahitiClient client, Renderer renderer) {
         this.client = client;
@@ -80,7 +81,7 @@ public class Reactor {
     }
 
     /**
-     * 处理登录响应: 在界面上显示您已经登录
+     * 处理登录响应: 在界面上显示您已经登录, 并加入刚才选择的小组
      *
      * @param event 事件对象
      */
@@ -88,6 +89,7 @@ public class Reactor {
     public void onLoginResponse(LoginAttemptEvent event) {
         if (event.isSuccess()) {
             renderer.actionAppendNotice("You are logged in.");
+            client.joinGroup(groupToJoin);
         }
     }
 
@@ -101,7 +103,7 @@ public class Reactor {
         try {
             loginUsername = event.getUsername();
             loginPassword = event.getPassword();
-
+            groupToJoin = event.getGroup();
             if (client.isConnected()) {
                 login();
             } else {
@@ -128,22 +130,6 @@ public class Reactor {
                         StringUtils.abbreviate(event.getPayload(), 20),
                         msg.getStatus().toString()
                 ));
-            }
-            return null;
-        });
-    }
-
-    @Subscribe
-    public void onClickGroup(UIOnGroupCommandEvent event) {
-        client.sendGroupCommand(event.getAction(), event.getGroupId(), msg -> {
-            if (msg.getStatus() != Message.StatusCode.SUCCESS) {
-                renderer.actionAppendNotice(String.format(
-                        "Failed to deliver \"%s\"\nReason: %s",
-                        StringUtils.abbreviate(event.getAction() + " " + event.getGroupId(), 20),
-                        msg.getStatus().toString()
-                ));
-            } else {
-                renderer.actionAppendNotice("You are now in Group: " + event.getGroupId());
             }
             return null;
         });

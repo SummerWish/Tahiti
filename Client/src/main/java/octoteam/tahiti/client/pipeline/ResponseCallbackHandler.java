@@ -4,6 +4,7 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import octoteam.tahiti.client.CallbackRepository;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
+import octoteam.tahiti.shared.netty.ExtendedContext;
 import octoteam.tahiti.shared.netty.MessageHandler;
 
 /**
@@ -15,7 +16,8 @@ public class ResponseCallbackHandler extends MessageHandler {
 
     private CallbackRepository callbackRepository;
 
-    public ResponseCallbackHandler(CallbackRepository callbackRepository) {
+    public ResponseCallbackHandler(ExtendedContext extendedContext, CallbackRepository callbackRepository) {
+        super(extendedContext);
         this.callbackRepository = callbackRepository;
     }
 
