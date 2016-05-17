@@ -1,10 +1,12 @@
 package octoteam.tahiti.server.pipeline;
 
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.util.concurrent.GlobalEventExecutor;
+import octoteam.tahiti.protocol.SocketMessageProtos.GroupMembersRespBody;
 import octoteam.tahiti.protocol.SocketMessageProtos.UserGroupingReqBody.Action;
 import octoteam.tahiti.protocol.SocketMessageProtos.ChatBroadcastPushBody;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
@@ -54,22 +56,38 @@ public class MessageForwardHandler extends MessageHandler {
         if (msg.getService() == Message.ServiceCode.USER_GROUPING_REQUEST) {
             String groupId = msg.getUserGroupingReq().getGroupId();
             ChannelGroup group = clientGroups.get(groupId);
-            boolean status;
+            boolean isSuccessful;
             if (msg.getUserGroupingReq().getAction() == Action.JOIN) {
                 PipelineHelper.getSession(ctx.channel()).put("groupId", groupId);
                 if (group == null) {
                     group = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-                    status = group.add(ctx.channel());
+                    isSuccessful = group.add(ctx.channel());
                     clientGroups.put(groupId, group);
                 } else {
-                    status = group.add(ctx.channel());
+                    isSuccessful = group.add(ctx.channel());
+                }
+                if (isSuccessful) {
+                    GroupMembersRespBody.Builder builder = GroupMembersRespBody.newBuilder().setGroupId(groupId);
+                    int memberIndex = 1;
+                    for (Channel memberChannel : group) {
+                        Credential credential = (Credential) PipelineHelper.getSession(memberChannel).get("credential");
+                        String username = credential.getUsername();
+                        builder.setUsername(memberIndex, username);
+                        memberIndex += 1;
+                    }
+                    Message groupMembersResp = ProtocolUtil
+                            .buildResponse(msg)
+                            .setStatus(Message.StatusCode.SUCCESS)
+                            .setGroupMembersRespBody(builder)
+                            .build();
+                    ctx.channel().writeAndFlush(groupMembersResp);
                 }
             } else {
-                status = group != null && group.remove(ctx.channel());
+                isSuccessful = group != null && group.remove(ctx.channel());
             }
             Message resp = ProtocolUtil.
                     buildResponse(msg)
-                    .setStatus(status ? Message.StatusCode.SUCCESS : Message.StatusCode.FAIL)
+                    .setStatus(isSuccessful ? Message.StatusCode.SUCCESS : Message.StatusCode.FAIL)
                     .build();
             ctx.channel().writeAndFlush(resp);
         }

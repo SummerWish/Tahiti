@@ -58,6 +58,7 @@ message Message {
     SessionExpiredPushBody    sessionExpiredPush  = 30;
     ChatBroadcastPushBody     chatBroadcastPush   = 40;
     UserGroupingReqBody       userGroupingReq     = 50;
+    GroupMembersRespBody      groupMembersRespBody  = 60;
   }
 
 }
@@ -104,4 +105,9 @@ message UserGroupingReqBody {
     LEAVE                       = 1;
   }
   Action action                 = 2;
+}
+
+message GroupMembersRespBody {
+  string groupId                = 1;
+  repeated string username      = 2;
 }
