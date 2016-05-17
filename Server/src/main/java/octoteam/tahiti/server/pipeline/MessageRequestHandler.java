@@ -2,9 +2,6 @@ package octoteam.tahiti.server.pipeline;
 
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.group.ChannelGroup;
-import io.netty.channel.group.DefaultChannelGroup;
-import io.netty.util.concurrent.GlobalEventExecutor;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
 import octoteam.tahiti.server.service.MessageService;
 import octoteam.tahiti.server.session.Credential;
@@ -14,20 +11,11 @@ import octoteam.tahiti.shared.netty.ExtendedContext;
 import octoteam.tahiti.shared.netty.MessageHandler;
 import octoteam.tahiti.shared.protocol.ProtocolUtil;
 
-import java.util.concurrent.ConcurrentHashMap;
-
 /**
  * 判断消息类型，如果属于CHAT_PUBLISH_REQUEST类型则回复成功。
  */
 @ChannelHandler.Sharable
 public class MessageRequestHandler extends MessageHandler {
-
-    /**
-     * 收集所有与服务端成功建立起连接的客户端
-     */
-    private final static ChannelGroup clients = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-
-    private final static ConcurrentHashMap<String, ChannelGroup> clientGroups = new ConcurrentHashMap<>();
 
     private MessageService messageService;
 
