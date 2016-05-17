@@ -45,7 +45,7 @@ public class Credential {
     /**
      * 由 Account Model 构造一个标记为已登录的认证信息
      *
-     * @param account 用户
+     * @param account     用户
      * @param groupNumber 用户分组
      */
     public Credential(Account account) {

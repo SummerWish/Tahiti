@@ -2,7 +2,7 @@ package octoteam.tahiti.client.event;
 
 import octoteam.tahiti.protocol.SocketMessageProtos.UserGroupingReqBody.Action;
 
-public class UIOnGroupCommandEvent extends UIEvent{
+public class UIOnGroupCommandEvent extends UIEvent {
 
     /**
      * Action.JOIN or Action.LEAVE

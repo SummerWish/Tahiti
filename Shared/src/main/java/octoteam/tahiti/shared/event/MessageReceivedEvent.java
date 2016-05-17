@@ -3,7 +3,7 @@ package octoteam.tahiti.shared.event;
 import com.google.common.base.MoreObjects;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
 
-public class MessageReceivedEvent extends BaseEvent{
+public class MessageReceivedEvent extends BaseEvent {
     /**
      * 收到的消息
      */

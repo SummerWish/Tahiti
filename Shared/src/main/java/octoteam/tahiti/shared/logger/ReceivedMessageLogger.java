@@ -1,13 +1,12 @@
 package octoteam.tahiti.shared.logger;
 
-import ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy;
-import ch.qos.logback.core.util.FileSize;
-import com.google.common.eventbus.Subscribe;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.core.rolling.RollingFileAppender;
-import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
+import ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy;
+import ch.qos.logback.core.util.FileSize;
+import com.google.common.eventbus.Subscribe;
 import octoteam.tahiti.shared.event.MessageReceivedEvent;
 
 public class ReceivedMessageLogger {

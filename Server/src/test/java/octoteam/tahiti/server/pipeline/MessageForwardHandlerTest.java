@@ -4,7 +4,6 @@ import io.netty.channel.embedded.EmbeddedChannel;
 import octoteam.tahiti.protocol.SocketMessageProtos;
 import octoteam.tahiti.protocol.SocketMessageProtos.ChatSendMessageReqBody;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
-import org.apache.commons.lang3.ObjectUtils;
 import org.junit.Test;
 
 import java.util.Calendar;
@@ -62,7 +61,6 @@ public class MessageForwardHandlerTest {
 
         assertEquals(msgGroup1Req, channelSender.readInbound());
         assertNotNull(channelSender.readOutbound());
-
 
 
         for (int i = 0; i < 2; ++i) {

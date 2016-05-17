@@ -3,7 +3,6 @@ package octoteam.tahiti.server.pipeline;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
-import octoteam.tahiti.shared.event.MessageReceivedEvent;
 import octoteam.tahiti.shared.netty.MessageHandler;
 import octoteam.tahiti.shared.protocol.ProtocolUtil;
 
