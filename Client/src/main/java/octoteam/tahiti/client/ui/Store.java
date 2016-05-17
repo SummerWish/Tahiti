@@ -1,12 +1,12 @@
 package octoteam.tahiti.client.ui;
 
-import com.google.common.base.Function;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * 该模块实现了响应式状态存储。
@@ -15,10 +15,10 @@ import java.util.List;
 public class Store {
 
     private HashMap<String, Object> store = new HashMap<>();
-    private HashMap<String, List<Function<Object, Void>>> observations = new HashMap<>();
+    private HashMap<String, List<Consumer<Object>>> observations = new HashMap<>();
 
     private Boolean batchOp = false;
-    private List<Pair<Function<Object, Void>, Object>> changedObservations = new LinkedList<>();
+    private List<Pair<Consumer<Object>, Object>> changedObservations = new LinkedList<>();
 
     /**
      * 启动更新过程, 在执行完毕后自动结束更新过程
@@ -75,10 +75,10 @@ public class Store {
         if (!batchOp) {
             return;
         }
-        List<Pair<Function<Object, Void>, Object>> copy = new LinkedList<>(changedObservations);
+        List<Pair<Consumer<Object>, Object>> copy = new LinkedList<>(changedObservations);
         changedObservations.clear();
 
-        copy.forEach(pair -> pair.getLeft().apply(pair.getRight()));
+        copy.forEach(pair -> pair.getLeft().accept(pair.getRight()));
         batchOp = false;
     }
 
@@ -98,7 +98,7 @@ public class Store {
      * @param key 状态名
      * @param r   在状态被改变时所被执行的内容
      */
-    public void observe(String key, Function<Object, Void> r) {
+    public void observe(String key, Consumer<Object> r) {
         if (!observations.containsKey(key)) {
             observations.put(key, new LinkedList<>());
         }

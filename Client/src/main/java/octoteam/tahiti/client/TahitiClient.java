@@ -1,6 +1,5 @@
 package octoteam.tahiti.client;
 
-import com.google.common.base.Function;
 import com.google.common.eventbus.EventBus;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -20,6 +19,7 @@ import octoteam.tahiti.shared.netty.pipeline.UserEventToEventBusHandler;
 import wheellllll.config.Config;
 
 import java.util.Date;
+import java.util.function.Consumer;
 
 public class TahitiClient {
 
@@ -117,7 +117,7 @@ public class TahitiClient {
         }
     }
 
-    private Message.Builder buildRequest(Function<Message, Void> callback) {
+    private Message.Builder buildRequest(Consumer<Message> callback) {
         return Message
                 .newBuilder()
                 .setSeqId(callbackRepo.getNextSequence(callback))
@@ -128,7 +128,7 @@ public class TahitiClient {
         return buildRequest(null);
     }
 
-    public void login(String username, String password, Function<Message, Void> callback) {
+    public void login(String username, String password, Consumer<Message> callback) {
         Message.Builder req = buildRequest(callback)
                 .setService(Message.ServiceCode.USER_SIGN_IN_REQUEST)
                 .setUserSignInReq(UserSignInReqBody.newBuilder()
@@ -142,7 +142,7 @@ public class TahitiClient {
         login(username, password, null);
     }
 
-    public void sendMessage(String message, Function<Message, Void> callback) {
+    public void sendMessage(String message, Consumer<Message> callback) {
         Message.Builder req = buildRequest(callback)
                 .setService(Message.ServiceCode.CHAT_PUBLISH_REQUEST)
                 .setChatPublishReq(ChatPublishReqBody.newBuilder()
@@ -157,7 +157,7 @@ public class TahitiClient {
         sendMessage(message, null);
     }
 
-    public void joinGroup(String group, Function<Message, Void> callback) {
+    public void joinGroup(String group, Consumer<Message> callback) {
         Message.Builder req = buildRequest(callback)
                 .setService(Message.ServiceCode.GROUP_REQUEST)
                 .setGroupReq(GroupReqBody.newBuilder()

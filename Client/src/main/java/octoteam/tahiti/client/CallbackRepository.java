@@ -1,10 +1,10 @@
 package octoteam.tahiti.client;
 
-import com.google.common.base.Function;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Consumer;
 
 /**
  * 基于有序序列的回调仓库
@@ -13,7 +13,7 @@ public class CallbackRepository {
 
     private static AtomicLong msgSequence = new AtomicLong();
 
-    private ConcurrentHashMap<Long, Function<Message, Void>> callbacks = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Long, Consumer<Message>> callbacks = new ConcurrentHashMap<>();
 
     /**
      * 获得下一个序列值
@@ -30,7 +30,7 @@ public class CallbackRepository {
      * @param r 回调
      * @return 新序列值
      */
-    public long getNextSequence(Function<Message, Void> r) {
+    public long getNextSequence(Consumer<Message> r) {
         long seq = getNextSequence();
         if (r != null) callbacks.put(seq, r);
         return seq;
@@ -44,9 +44,9 @@ public class CallbackRepository {
      */
     public void resolveCallback(long seqId, Message msg) {
         if (callbacks.containsKey(seqId)) {
-            Function<Message, Void> r = callbacks.get(seqId);
+            Consumer<Message> r = callbacks.get(seqId);
             callbacks.remove(seqId);
-            r.apply(msg);
+            r.accept(msg);
         }
     }
 

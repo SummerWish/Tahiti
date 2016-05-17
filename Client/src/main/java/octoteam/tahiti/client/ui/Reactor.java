@@ -3,10 +3,11 @@ package octoteam.tahiti.client.ui;
 import com.google.common.eventbus.Subscribe;
 import octoteam.tahiti.client.TahitiClient;
 import octoteam.tahiti.client.event.*;
-import octoteam.tahiti.protocol.SocketMessageProtos.*;
+import octoteam.tahiti.protocol.SocketMessageProtos.Message;
+import octoteam.tahiti.protocol.SocketMessageProtos.SessionExpiredPushBody;
+import octoteam.tahiti.protocol.SocketMessageProtos.User;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class Reactor {
@@ -35,7 +36,6 @@ public class Reactor {
                 renderer.actionHideLoginDialog();
                 renderer.actionShowMainWindow();
             }
-            return null;
         });
     }
 
@@ -102,7 +102,6 @@ public class Reactor {
                                     .collect(Collectors.joining(", "))
                     ));
                 }
-                return null;
             });
         }
     }
@@ -145,7 +144,6 @@ public class Reactor {
                         msg.getStatus().toString()
                 ));
             }
-            return null;
         });
     }
 

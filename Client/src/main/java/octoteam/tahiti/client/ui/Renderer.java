@@ -91,7 +91,6 @@ public class Renderer {
         store.observe(LOGIN_DIALOG_VISIBLE, v -> {
             gui.addOrRemoveWindow((Boolean) v, dialog);
             gui.updateScreen();
-            return null;
         });
     }
 
@@ -116,12 +115,10 @@ public class Renderer {
         store.init(LOGIN_STATEDIALOG_TEXT, "");
         store.observe(LOGIN_STATEDIALOG_TEXT, v -> {
             label.setText((String) v);
-            return null;
         });
         store.observe(LOGIN_STATEDIALOG_VISIBLE, v -> {
             gui.addOrRemoveWindow((Boolean) v, dialog);
             gui.updateScreen();
-            return null;
         });
     }
 
@@ -172,7 +169,6 @@ public class Renderer {
         store.observe(MAIN_WINDOW_VISIBLE, v -> {
             gui.addOrRemoveWindow((Boolean) v, dialog);
             gui.updateScreen();
-            return null;
         });
 
         store.init(MAIN_WINDOW_TEXT, "");
@@ -180,7 +176,6 @@ public class Renderer {
             history.setText((String) v);
             history.handleKeyStroke(new KeyStroke(KeyType.End));
             gui.updateScreen();
-            return null;
         });
     }
 
