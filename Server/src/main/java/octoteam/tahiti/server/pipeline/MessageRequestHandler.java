@@ -17,7 +17,7 @@ import octoteam.tahiti.shared.protocol.ProtocolUtil;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 判断消息类型，如果属于CHAT_SEND_MESSAGE_REQUEST类型则回复成功。
+ * 判断消息类型，如果属于CHAT_PUBLISH_REQUEST类型则回复成功。
  */
 @ChannelHandler.Sharable
 public class MessageRequestHandler extends MessageHandler {
@@ -38,7 +38,7 @@ public class MessageRequestHandler extends MessageHandler {
 
     @Override
     protected void messageReceived(ChannelHandlerContext ctx, Message msg) {
-        if (msg.getService() != Message.ServiceCode.CHAT_SEND_MESSAGE_REQUEST) {
+        if (msg.getService() != Message.ServiceCode.CHAT_PUBLISH_REQUEST) {
             ctx.fireChannelRead(msg);
             return;
         }
@@ -55,7 +55,7 @@ public class MessageRequestHandler extends MessageHandler {
         messageService.addMessage(
                 currentCredential.getUID(),
                 group,
-                msg.getChatSendMessageReq().getPayload()
+                msg.getChatPublishReq().getPayload()
         );
 
         // Push message to group members

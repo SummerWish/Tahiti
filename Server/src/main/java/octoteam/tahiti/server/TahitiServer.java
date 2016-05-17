@@ -85,14 +85,14 @@ public class TahitiServer {
                                     .addLast(new GroupRequestHandler(extendedContext))
                                     .addLast(new RequestRateLimitHandler(
                                             extendedContext,
-                                            ServiceCode.CHAT_SEND_MESSAGE_REQUEST,
+                                            ServiceCode.CHAT_PUBLISH_REQUEST,
                                             RateLimitExceededEvent.NAME_PER_SECOND,
                                             () -> new License(License.LicenseType.THROUGHPUT,
                                                     config.getInt("rateLimit.perSecond")))
                                     )
                                     .addLast(new RequestRateLimitHandler(
                                             extendedContext,
-                                            ServiceCode.CHAT_SEND_MESSAGE_REQUEST,
+                                            ServiceCode.CHAT_PUBLISH_REQUEST,
                                             RateLimitExceededEvent.NAME_PER_SESSION,
                                             () -> new License(License.LicenseType.CAPACITY,
                                                     config.getInt("rateLimit.perSession")))

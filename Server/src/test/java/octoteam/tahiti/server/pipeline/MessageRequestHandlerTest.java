@@ -1,8 +1,7 @@
 package octoteam.tahiti.server.pipeline;
 
 import io.netty.channel.embedded.EmbeddedChannel;
-import octoteam.tahiti.protocol.SocketMessageProtos.ChatSendMessageReqBody;
-import octoteam.tahiti.protocol.SocketMessageProtos.Message;
+import octoteam.tahiti.protocol.SocketMessageProtos.*;
 import octoteam.tahiti.server.service.DefaultMessageService;
 import octoteam.tahiti.shared.netty.ExtendedContext;
 import org.junit.Test;
@@ -14,7 +13,7 @@ public class MessageRequestHandlerTest {
     @Test
     public void testMessageRequest() {
 
-        // MessageRequestHandler should handle CHAT_SEND_MESSAGE_REQUEST
+        // MessageRequestHandler should handle CHAT_PUBLISH_REQUEST
 
         EmbeddedChannel channel = new EmbeddedChannel(new MessageRequestHandler(
                 new ExtendedContext(),
@@ -24,8 +23,8 @@ public class MessageRequestHandlerTest {
         Message msgRequest = Message.newBuilder()
                 .setSeqId(123)
                 .setDirection(Message.DirectionCode.REQUEST)
-                .setService(Message.ServiceCode.CHAT_SEND_MESSAGE_REQUEST)
-                .setChatSendMessageReq(ChatSendMessageReqBody.newBuilder()
+                .setService(Message.ServiceCode.CHAT_PUBLISH_REQUEST)
+                .setChatPublishReq(ChatPublishReqBody.newBuilder()
                         .setPayload("foo")
                         .setTimestamp(333)
                 )
@@ -76,7 +75,7 @@ public class MessageRequestHandlerTest {
     @Test
     public void testMessageForward() {
 
-        // MessageForwardHandler should construct CHAT_BROADCAST_EVENT message only when received CHAT_SEND_MESSAGE_REQUEST message
+        // MessageForwardHandler should construct CHAT_BROADCAST_EVENT message only when received CHAT_PUBLISH_REQUEST message
 
         EmbeddedChannel channelSender = new EmbeddedChannel(new NaiveChannelId(0), new MessageForwardHandler());
         EmbeddedChannel channelReceivers[] = new EmbeddedChannel[3];
@@ -105,8 +104,8 @@ public class MessageRequestHandlerTest {
         Message msgRequest = Message.newBuilder()
                 .setSeqId(1038)
                 .setDirection(Message.DirectionCode.REQUEST)
-                .setService(Message.ServiceCode.CHAT_SEND_MESSAGE_REQUEST)
-                .setChatSendMessageReq(ChatSendMessageReqBody.newBuilder()
+                .setService(Message.ServiceCode.CHAT_PUBLISH_REQUEST)
+                .setChatPublishReq(ChatPublishReqBody.newBuilder()
                         .setPayload("HELLO :P")
                         .setTimestamp(Calendar.getInstance().getTimeInMillis())
                 ).build();

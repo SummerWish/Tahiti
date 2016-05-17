@@ -14,7 +14,7 @@ import octoteam.tahiti.client.event.ConnectErrorEvent;
 import octoteam.tahiti.client.event.ConnectedEvent;
 import octoteam.tahiti.client.event.DisconnectedEvent;
 import octoteam.tahiti.client.pipeline.*;
-import octoteam.tahiti.protocol.SocketMessageProtos.ChatSendMessageReqBody;
+import octoteam.tahiti.protocol.SocketMessageProtos.ChatPublishReqBody;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
 import octoteam.tahiti.protocol.SocketMessageProtos.UserGroupingReqBody;
 import octoteam.tahiti.protocol.SocketMessageProtos.UserSignInReqBody;
@@ -144,8 +144,8 @@ public class TahitiClient {
 
     public void sendMessage(String message, Function<Message, Void> callback) {
         Message.Builder req = buildRequest(callback)
-                .setService(Message.ServiceCode.CHAT_SEND_MESSAGE_REQUEST)
-                .setChatSendMessageReq(ChatSendMessageReqBody.newBuilder()
+                .setService(Message.ServiceCode.CHAT_PUBLISH_REQUEST)
+                .setChatPublishReq(ChatPublishReqBody.newBuilder()
                         .setPayload(message)
                         .setTimestamp(new Date().getTime())
                 );

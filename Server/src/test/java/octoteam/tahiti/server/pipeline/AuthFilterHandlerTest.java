@@ -138,7 +138,7 @@ public class AuthFilterHandlerTest {
         Message chatRequest = Message.newBuilder()
                 .setSeqId(123)
                 .setDirection(Message.DirectionCode.REQUEST)
-                .setService(Message.ServiceCode.CHAT_SEND_MESSAGE_REQUEST)
+                .setService(Message.ServiceCode.CHAT_PUBLISH_REQUEST)
                 .build();
 
         channel.writeInbound(chatRequest);
@@ -169,7 +169,7 @@ public class AuthFilterHandlerTest {
         Message chatRequest = Message.newBuilder()
                 .setSeqId(123)
                 .setDirection(Message.DirectionCode.REQUEST)
-                .setService(Message.ServiceCode.CHAT_SEND_MESSAGE_REQUEST)
+                .setService(Message.ServiceCode.CHAT_PUBLISH_REQUEST)
                 .build();
 
         channel.writeInbound(chatRequest);
@@ -193,7 +193,7 @@ public class AuthFilterHandlerTest {
         Message chatRequest = Message.newBuilder()
                 .setSeqId(123)
                 .setDirection(Message.DirectionCode.REQUEST)
-                .setService(Message.ServiceCode.CHAT_SEND_MESSAGE_REQUEST)
+                .setService(Message.ServiceCode.CHAT_PUBLISH_REQUEST)
                 .build();
 
         channel.writeInbound(chatRequest);

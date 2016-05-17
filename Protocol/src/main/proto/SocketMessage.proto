@@ -21,9 +21,10 @@ message Message {
     PING_REQUEST                = 1;    // 测试请求
     HEARTBEAT_PUSH              = 5;    // 心跳事件
     USER_SIGN_IN_REQUEST        = 10;   // 登录请求
-    CHAT_SEND_MESSAGE_REQUEST   = 20;   // 发送消息请求
+    CHAT_PUBLISH_REQUEST        = 20;   // 发送聊天消息请求
     SESSION_EXPIRED_PUSH        = 30;   // 会话过期事件
     CHAT_BROADCAST_PUSH         = 40;   // 消息广播事件
+    CHAT_SYNC_REQUEST           = 41;   // 同步消息请求
     GROUP_REQUEST               = 51;   // 加入或离开群组请求
     GROUP_PUSH                  = 52;   // 加入或离开群组事件
   }
@@ -55,8 +56,10 @@ message Message {
     PingPongBody              pingPong            = 5;
     UserSignInReqBody         userSignInReq       = 10;
     UserSignInRespBody        userSignInResp      = 11;
-    ChatSendMessageReqBody    chatSendMessageReq  = 20;
+    ChatPublishReqBody        chatPublishReq      = 20;
     SessionExpiredPushBody    sessionExpiredPush  = 30;
+    ChatSyncReqBody           chatSyncReq         = 40;
+    ChatSyncRespBody          chatSyncResp        = 41;
     GroupReqBody              groupReq            = 50;
     GroupPushBody             groupPushBody       = 51;
   }
@@ -81,9 +84,10 @@ message UserSignInRespBody {
   int32 UID                     = 1;    // 登录成功才有
 }
 
-message ChatSendMessageReqBody {
-  string payload                = 2;
-  uint64 timestamp              = 3;
+message ChatPublishReqBody {
+  string payload                = 1;
+  uint64 timestamp              = 2;
+  string groupId                = 3;
 }
 
 message SessionExpiredPushBody {
@@ -96,14 +100,22 @@ message SessionExpiredPushBody {
   Reason reason                 = 1;
 }
 
-/*
-message ChatBroadcastPushBody {
+message ChatSyncReqBody {
+  string groupId                = 1;
+  uint64 since                  = 2;
+}
+
+message ChatMessage {
+  User user                     = 1;
   string payload                = 2;
   uint64 timestamp              = 3;
-  int32 senderUID               = 4;
-  string senderUsername         = 5;
+  string groupId                = 4;
 }
-*/
+
+message ChatSyncRespBody {
+  string groupId                = 1;
+  repeated ChatMessage messages = 2;
+}
 
 enum GroupOperation {
   JOIN                          = 0;
