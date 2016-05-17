@@ -12,6 +12,7 @@ import octoteam.tahiti.server.service.AccountNotMatchException;
 import octoteam.tahiti.server.service.AccountService;
 import octoteam.tahiti.server.session.Credential;
 import octoteam.tahiti.server.session.PipelineHelper;
+import octoteam.tahiti.shared.netty.ExtendedContext;
 import octoteam.tahiti.shared.netty.MessageHandler;
 import octoteam.tahiti.shared.protocol.ProtocolUtil;
 
@@ -29,7 +30,8 @@ public class AuthRequestHandler extends MessageHandler {
     /**
      * @param accountService 账户服务模块
      */
-    public AuthRequestHandler(AccountService accountService) {
+    public AuthRequestHandler(ExtendedContext extendedContext, AccountService accountService) {
+        super(extendedContext);
         this.accountService = accountService;
     }
 

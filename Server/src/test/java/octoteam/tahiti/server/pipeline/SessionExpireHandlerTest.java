@@ -4,6 +4,7 @@ import io.netty.channel.embedded.EmbeddedChannel;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
 import octoteam.tahiti.protocol.SocketMessageProtos.SessionExpiredPushBody;
 import octoteam.tahiti.server.event.RateLimitExceededEvent;
+import octoteam.tahiti.shared.netty.ExtendedContext;
 import org.junit.Test;
 import wheellllll.license.License;
 
@@ -18,10 +19,17 @@ public class SessionExpireHandlerTest {
 
     @Test
     public void testSessionExpired() {
-        EmbeddedChannel channel = new EmbeddedChannel(new RequestRateLimitHandler(
-                Message.ServiceCode.PING_REQUEST,
-                RateLimitExceededEvent.NAME_PER_SESSION,
-                () -> new License(License.LicenseType.CAPACITY, 2)), new SessionExpireHandler());
+        EmbeddedChannel channel = new EmbeddedChannel(
+                new RequestRateLimitHandler(
+                        new ExtendedContext(),
+                        Message.ServiceCode.PING_REQUEST,
+                        RateLimitExceededEvent.NAME_PER_SESSION,
+                        () -> new License(License.LicenseType.CAPACITY, 2)
+                ),
+                new SessionExpireHandler(
+                        new ExtendedContext()
+                )
+        );
 
         for (int i = 0; i < 3; i++) {
             Message pingRequest = Message.newBuilder()

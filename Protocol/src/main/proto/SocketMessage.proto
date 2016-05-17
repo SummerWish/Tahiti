@@ -24,7 +24,8 @@ message Message {
     CHAT_SEND_MESSAGE_REQUEST   = 20;   // 发送消息请求
     SESSION_EXPIRED_PUSH        = 30;   // 会话过期事件
     CHAT_BROADCAST_PUSH         = 40;   // 消息广播事件
-    USER_GROUPING_REQUEST       = 50;   // 分组请求
+    GROUP_REQUEST               = 51;   // 加入或离开群组请求
+    GROUP_PUSH                  = 52;   // 加入或离开群组事件
   }
 
   enum StatusCode {
@@ -56,11 +57,15 @@ message Message {
     UserSignInRespBody        userSignInResp      = 11;
     ChatSendMessageReqBody    chatSendMessageReq  = 20;
     SessionExpiredPushBody    sessionExpiredPush  = 30;
-    ChatBroadcastPushBody     chatBroadcastPush   = 40;
-    UserGroupingReqBody       userGroupingReq     = 50;
-    GroupMembersRespBody      groupMembersRespBody  = 60;
+    GroupReqBody              groupReq            = 50;
+    GroupPushBody             groupPushBody       = 51;
   }
 
+}
+
+message User {
+  int32 UID                     = 1;
+  string username               = 2;
 }
 
 message PingPongBody {
@@ -91,23 +96,27 @@ message SessionExpiredPushBody {
   Reason reason                 = 1;
 }
 
+/*
 message ChatBroadcastPushBody {
   string payload                = 2;
   uint64 timestamp              = 3;
   int32 senderUID               = 4;
   string senderUsername         = 5;
 }
+*/
 
-message UserGroupingReqBody {
-  string groupId                = 1;
-  enum Action {
-    JOIN                        = 0;
-    LEAVE                       = 1;
-  }
-  Action action                 = 2;
+enum GroupOperation {
+  JOIN                          = 0;
+  LEAVE                         = 1;
 }
 
-message GroupMembersRespBody {
+message GroupReqBody {
   string groupId                = 1;
-  repeated string username      = 2;
+  GroupOperation op             = 2;
+}
+
+message GroupPushBody {
+  string groupId                = 1;
+  GroupOperation op             = 2;
+  repeated User latestUsers     = 3;
 }

@@ -3,6 +3,7 @@ package octoteam.tahiti.server.pipeline;
 import io.netty.channel.embedded.EmbeddedChannel;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
 import octoteam.tahiti.protocol.SocketMessageProtos.PingPongBody;
+import octoteam.tahiti.shared.netty.ExtendedContext;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -14,7 +15,9 @@ public class PingRequestHandlerTest {
 
         // PingRequestHandler should handle PING_REQUEST
 
-        EmbeddedChannel channel = new EmbeddedChannel(new PingRequestHandler());
+        EmbeddedChannel channel = new EmbeddedChannel(new PingRequestHandler(
+                new ExtendedContext()
+        ));
 
         Message pingRequest = Message.newBuilder()
                 .setSeqId(123)
@@ -49,7 +52,9 @@ public class PingRequestHandlerTest {
 
         // PingRequestHandler should NOT handle messages other than PING_REQUEST
 
-        EmbeddedChannel channel = new EmbeddedChannel(new PingRequestHandler());
+        EmbeddedChannel channel = new EmbeddedChannel(new PingRequestHandler(
+                new ExtendedContext()
+        ));
 
         Message otherRequest = Message.newBuilder()
                 .setSeqId(321)

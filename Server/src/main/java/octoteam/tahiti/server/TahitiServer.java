@@ -15,6 +15,8 @@ import octoteam.tahiti.protocol.SocketMessageProtos.Message.ServiceCode;
 import octoteam.tahiti.server.event.RateLimitExceededEvent;
 import octoteam.tahiti.server.pipeline.*;
 import octoteam.tahiti.server.service.AccountService;
+import octoteam.tahiti.server.service.MessageService;
+import octoteam.tahiti.shared.netty.ExtendedContext;
 import octoteam.tahiti.shared.netty.pipeline.UserEventToEventBusHandler;
 import wheellllll.config.Config;
 import wheellllll.license.License;
@@ -33,6 +35,10 @@ public class TahitiServer {
 
     private final AccountService accountService;
 
+    private final MessageService messageService;
+
+    private final ExtendedContext extendedContext = new ExtendedContext();
+
     /**
      * 根据参数构造并初始化服务端
      *
@@ -40,10 +46,11 @@ public class TahitiServer {
      * @param eventBus       服务端事件总线
      * @param accountService 用户服务
      */
-    public TahitiServer(Config config, EventBus eventBus, AccountService accountService) {
+    public TahitiServer(Config config, EventBus eventBus, AccountService accountService, MessageService messageService) {
         this.eventBus = eventBus;
         this.config = config;
         this.accountService = accountService;
+        this.messageService = messageService;
     }
 
     /**
@@ -70,27 +77,28 @@ public class TahitiServer {
                                     .addLast(new ProtobufEncoder())
                                     .addLast(new ProtobufVarint32FrameDecoder())
                                     .addLast(new ProtobufDecoder(Message.getDefaultInstance()))
-                                    .addLast(new MessageReceivedHandler())
                                     .addLast(new IdleStateHandler(0, 0, 30, TimeUnit.SECONDS))
-                                    .addLast(new HeartbeatHandler())
-                                    .addLast(new PingRequestHandler())
-                                    .addLast(new AuthRequestHandler(accountService))
-                                    .addLast(new AuthFilterHandler())
+                                    .addLast(new HeartbeatHandler(extendedContext))
+                                    .addLast(new PingRequestHandler(extendedContext))
+                                    .addLast(new AuthRequestHandler(extendedContext, accountService))
+                                    .addLast(new AuthFilterHandler(extendedContext))
+                                    .addLast(new GroupRequestHandler(extendedContext))
                                     .addLast(new RequestRateLimitHandler(
+                                            extendedContext,
                                             ServiceCode.CHAT_SEND_MESSAGE_REQUEST,
                                             RateLimitExceededEvent.NAME_PER_SECOND,
                                             () -> new License(License.LicenseType.THROUGHPUT,
                                                     config.getInt("rateLimit.perSecond")))
                                     )
                                     .addLast(new RequestRateLimitHandler(
+                                            extendedContext,
                                             ServiceCode.CHAT_SEND_MESSAGE_REQUEST,
                                             RateLimitExceededEvent.NAME_PER_SESSION,
                                             () -> new License(License.LicenseType.CAPACITY,
                                                     config.getInt("rateLimit.perSession")))
                                     )
-                                    .addLast(new SessionExpireHandler())
-                                    .addLast(new MessageRequestHandler())
-                                    .addLast(new MessageForwardHandler())
+                                    .addLast(new SessionExpireHandler(extendedContext))
+                                    .addLast(new MessageRequestHandler(extendedContext, messageService))
                                     .addLast(new UserEventToEventBusHandler(eventBus))
                             ;
                         }

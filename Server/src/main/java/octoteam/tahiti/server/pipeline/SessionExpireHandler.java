@@ -6,6 +6,7 @@ import octoteam.tahiti.protocol.SocketMessageProtos.Message;
 import octoteam.tahiti.protocol.SocketMessageProtos.SessionExpiredPushBody;
 import octoteam.tahiti.server.event.RateLimitExceededEvent;
 import octoteam.tahiti.server.session.PipelineHelper;
+import octoteam.tahiti.shared.netty.ExtendedContext;
 import octoteam.tahiti.shared.netty.MessageHandler;
 
 /**
@@ -14,6 +15,10 @@ import octoteam.tahiti.shared.netty.MessageHandler;
  */
 @ChannelHandler.Sharable
 public class SessionExpireHandler extends MessageHandler {
+
+    public SessionExpireHandler(ExtendedContext extendedContext) {
+        super(extendedContext);
+    }
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {

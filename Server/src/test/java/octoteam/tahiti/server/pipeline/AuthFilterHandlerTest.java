@@ -4,6 +4,7 @@ import io.netty.channel.embedded.EmbeddedChannel;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
 import octoteam.tahiti.server.session.Credential;
 import octoteam.tahiti.server.session.PipelineHelper;
+import octoteam.tahiti.shared.netty.ExtendedContext;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -15,7 +16,9 @@ public class AuthFilterHandlerTest {
 
         // AuthFilterHandler should filter events if user is not authenticated
 
-        EmbeddedChannel channel = new EmbeddedChannel(new AuthFilterHandler());
+        EmbeddedChannel channel = new EmbeddedChannel(new AuthFilterHandler(
+                new ExtendedContext()
+        ));
 
         Message chatEvent = Message.newBuilder()
                 .setSeqId(123)
@@ -36,7 +39,9 @@ public class AuthFilterHandlerTest {
 
         // AuthFilterHandler should pass events to the next handler when user is authenticated
 
-        EmbeddedChannel channel = new EmbeddedChannel(new AuthFilterHandler());
+        EmbeddedChannel channel = new EmbeddedChannel(new AuthFilterHandler(
+                new ExtendedContext()
+        ));
         PipelineHelper.getSession(channel).put("credential", new Credential(1, "foo", true));
 
         Message chatEvent = Message.newBuilder()
@@ -58,7 +63,9 @@ public class AuthFilterHandlerTest {
 
         // AuthFilterHandler should filter events when user is a guest
 
-        EmbeddedChannel channel = new EmbeddedChannel(new AuthFilterHandler());
+        EmbeddedChannel channel = new EmbeddedChannel(new AuthFilterHandler(
+                new ExtendedContext()
+        ));
         PipelineHelper.getSession(channel).put("credential", new Credential(1, "guest", false));
 
         Message chatEvent = Message.newBuilder()
@@ -80,7 +87,9 @@ public class AuthFilterHandlerTest {
 
         // AuthFilterHandler should pass responses to the next handler even if user is not authenticated
 
-        EmbeddedChannel channel = new EmbeddedChannel(new AuthFilterHandler());
+        EmbeddedChannel channel = new EmbeddedChannel(new AuthFilterHandler(
+                new ExtendedContext()
+        ));
 
         Message someResponse = Message.newBuilder()
                 .setSeqId(345)
@@ -100,7 +109,9 @@ public class AuthFilterHandlerTest {
 
         // AuthFilterHandler should pass acks to the next handler even if user is not authenticated
 
-        EmbeddedChannel channel = new EmbeddedChannel(new AuthFilterHandler());
+        EmbeddedChannel channel = new EmbeddedChannel(new AuthFilterHandler(
+                new ExtendedContext()
+        ));
 
         Message someAck = Message.newBuilder()
                 .setSeqId(321)
@@ -120,7 +131,9 @@ public class AuthFilterHandlerTest {
 
         // AuthFilterHandler should filter requests if user is not authenticated
 
-        EmbeddedChannel channel = new EmbeddedChannel(new AuthFilterHandler());
+        EmbeddedChannel channel = new EmbeddedChannel(new AuthFilterHandler(
+                new ExtendedContext()
+        ));
 
         Message chatRequest = Message.newBuilder()
                 .setSeqId(123)
@@ -148,7 +161,9 @@ public class AuthFilterHandlerTest {
 
         // AuthFilterHandler should pass requests to the next handler if user is authenticated
 
-        EmbeddedChannel channel = new EmbeddedChannel(new AuthFilterHandler());
+        EmbeddedChannel channel = new EmbeddedChannel(new AuthFilterHandler(
+                new ExtendedContext()
+        ));
         PipelineHelper.getSession(channel).put("credential", new Credential(1, "foo", true));
 
         Message chatRequest = Message.newBuilder()
@@ -170,7 +185,9 @@ public class AuthFilterHandlerTest {
 
         // AuthFilterHandler should filter requests if user is a guest
 
-        EmbeddedChannel channel = new EmbeddedChannel(new AuthFilterHandler());
+        EmbeddedChannel channel = new EmbeddedChannel(new AuthFilterHandler(
+                new ExtendedContext()
+        ));
         PipelineHelper.getSession(channel).put("credential", new Credential(1, "guest", false));
 
         Message chatRequest = Message.newBuilder()

@@ -5,6 +5,7 @@ import io.netty.channel.ChannelHandlerContext;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
 import octoteam.tahiti.server.event.RateLimitExceededEvent;
 import octoteam.tahiti.server.session.PipelineHelper;
+import octoteam.tahiti.shared.netty.ExtendedContext;
 import octoteam.tahiti.shared.netty.MessageHandler;
 import octoteam.tahiti.shared.protocol.ProtocolUtil;
 import wheellllll.license.License;
@@ -30,10 +31,12 @@ public class RequestRateLimitHandler extends MessageHandler {
      * @param factory     一个返回新限流器实例的 Callable 对象, 将会使用该限流器进行限流
      */
     public RequestRateLimitHandler(
+            ExtendedContext extendedContext,
             Message.ServiceCode serviceCode,
             String name,
             Callable<License> factory
     ) {
+        super(extendedContext);
         this.serviceCode = serviceCode;
         this.name = name;
         this.sessionKey = "limiter_" + name;

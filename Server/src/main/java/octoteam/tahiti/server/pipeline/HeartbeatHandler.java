@@ -5,6 +5,7 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.timeout.IdleStateEvent;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
+import octoteam.tahiti.shared.netty.ExtendedContext;
 import octoteam.tahiti.shared.netty.MessageHandler;
 
 /**
@@ -14,22 +15,22 @@ import octoteam.tahiti.shared.netty.MessageHandler;
 @ChannelHandler.Sharable
 public class HeartbeatHandler extends MessageHandler {
 
+    public HeartbeatHandler(ExtendedContext extendedContext) {
+        super(extendedContext);
+    }
+
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-
         if (evt instanceof IdleStateEvent) {
             Message.Builder heartbeat = Message
                     .newBuilder()
                     .setDirection(Message.DirectionCode.PUSH)
                     .setService(Message.ServiceCode.HEARTBEAT_PUSH);
-
             ctx
                     .writeAndFlush(heartbeat.build())
                     .addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
         }
-
         ctx.fireUserEventTriggered(evt);
-
     }
 
 }

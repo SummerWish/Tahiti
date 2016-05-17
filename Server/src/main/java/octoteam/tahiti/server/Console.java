@@ -8,8 +8,12 @@ import octoteam.tahiti.archiver.RollingArchivePacker;
 import octoteam.tahiti.server.model.Account;
 import octoteam.tahiti.server.repository.AccountRepository;
 import octoteam.tahiti.server.repository.DatabaseAccountRepository;
+import octoteam.tahiti.server.repository.DatabaseMessageRepository;
+import octoteam.tahiti.server.repository.MessageRepository;
 import octoteam.tahiti.server.service.AccountService;
 import octoteam.tahiti.server.service.DefaultAccountService;
+import octoteam.tahiti.server.service.DefaultMessageService;
+import octoteam.tahiti.server.service.MessageService;
 import octoteam.tahiti.shared.event.BaseEvent;
 import octoteam.tahiti.shared.logger.ReceivedMessageLogger;
 import org.apache.commons.cli.CommandLine;
@@ -39,17 +43,22 @@ public class Console {
 
         // Open database connection
         ConnectionSource connectionSource = new JdbcConnectionSource(config.getString("database"));
-        AccountRepository repository = new DatabaseAccountRepository(connectionSource);
-        AccountService accountService = new DefaultAccountService(repository);
+        AccountRepository accountRepository = new DatabaseAccountRepository(connectionSource);
+        AccountService accountService = new DefaultAccountService(accountRepository);
+        MessageRepository messageRepository = new DatabaseMessageRepository(connectionSource);
+        MessageService messageService = new DefaultMessageService(messageRepository);
 
         if (cmd.hasOption("a")) {
 
-            Account account = repository.lookupAccountByUsername(cmd.getOptionValue("u"));
+            Account account = accountRepository.lookupAccountByUsername(cmd.getOptionValue("u"));
 
             if (account != null) {
                 System.out.println("Create user failed: Username exists.");
             } else {
-                repository.createAccount(cmd.getOptionValue("u"), cmd.getOptionValue("p"));
+                accountRepository.createAccount(new Account(
+                        cmd.getOptionValue("u"),
+                        cmd.getOptionValue("p")
+                ));
                 System.out.println("Create user succeeded.");
             }
 
@@ -92,7 +101,12 @@ public class Console {
             new RollingArchivePacker(weeklySourceFilePatterns, weeklyDestFilePattern).start();
 
             // Create server
-            TahitiServer server = new TahitiServer(config, serverEventBus, accountService);
+            TahitiServer server = new TahitiServer(
+                    config,
+                    serverEventBus,
+                    accountService,
+                    messageService
+            );
 
             server.run();
 

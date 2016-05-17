@@ -3,6 +3,7 @@ package octoteam.tahiti.server.pipeline;
 import io.netty.channel.embedded.EmbeddedChannel;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message.ServiceCode;
+import octoteam.tahiti.shared.netty.ExtendedContext;
 import org.junit.Test;
 import wheellllll.license.License;
 
@@ -16,6 +17,7 @@ public class RequestRateLimitHandlerTest {
         // RequestRateLimitHandler should not limit rate for request other than specified
 
         EmbeddedChannel channel = new EmbeddedChannel(new RequestRateLimitHandler(
+                new ExtendedContext(),
                 ServiceCode.PING_REQUEST,
                 "foo", () -> new License(License.LicenseType.CAPACITY, 2)
         ));
@@ -41,6 +43,7 @@ public class RequestRateLimitHandlerTest {
         // RequestRateLimitHandler should limit rate for specified request
 
         EmbeddedChannel channel = new EmbeddedChannel(new RequestRateLimitHandler(
+                new ExtendedContext(),
                 ServiceCode.PING_REQUEST,
                 "foo", () -> new License(License.LicenseType.CAPACITY, 2)
         ));

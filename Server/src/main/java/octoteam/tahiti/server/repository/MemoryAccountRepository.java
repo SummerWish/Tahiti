@@ -17,10 +17,9 @@ public class MemoryAccountRepository implements AccountRepository {
     }
 
     @Override
-    public Account createAccount(String username, String password) {
-        Account account = new Account(username, password);
+    public Account createAccount(Account account) {
         account.assignId(accounts.size() + 1);
-        accounts.put(username, account);
+        accounts.put(account.getUsername(), account);
         return account;
     }
 

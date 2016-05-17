@@ -3,9 +3,11 @@ package octoteam.tahiti.server.pipeline;
 import io.netty.channel.embedded.EmbeddedChannel;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
 import octoteam.tahiti.protocol.SocketMessageProtos.UserSignInReqBody;
+import octoteam.tahiti.server.model.Account;
 import octoteam.tahiti.server.repository.MemoryAccountRepository;
 import octoteam.tahiti.server.service.AccountService;
 import octoteam.tahiti.server.service.DefaultAccountService;
+import octoteam.tahiti.shared.netty.ExtendedContext;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,7 +24,10 @@ public class AuthRequestHandlerTest {
         repository = new MemoryAccountRepository();
         accountService = new DefaultAccountService(repository);
 
-        repository.createAccount("testUser", "password123");    // ID = 1
+        repository.createAccount(new Account(
+                "testUser",
+                "password123"
+        ));    // ID = 1
     }
 
     @Test
@@ -30,7 +35,10 @@ public class AuthRequestHandlerTest {
 
         // AuthRequestHandler should handle username_not_found login request
 
-        EmbeddedChannel channel = new EmbeddedChannel(new AuthRequestHandler(accountService));
+        EmbeddedChannel channel = new EmbeddedChannel(new AuthRequestHandler(
+                new ExtendedContext(),
+                accountService
+        ));
 
         Message loginRequest = Message.newBuilder()
                 .setSeqId(123)
@@ -62,7 +70,10 @@ public class AuthRequestHandlerTest {
 
         // AuthRequestHandler should handle wrong_password login request
 
-        EmbeddedChannel channel = new EmbeddedChannel(new AuthRequestHandler(accountService));
+        EmbeddedChannel channel = new EmbeddedChannel(new AuthRequestHandler(
+                new ExtendedContext(),
+                accountService
+        ));
 
         Message loginRequest = Message.newBuilder()
                 .setSeqId(123)
@@ -94,7 +105,10 @@ public class AuthRequestHandlerTest {
 
         // AuthRequestHandler should handle success login request
 
-        EmbeddedChannel channel = new EmbeddedChannel(new AuthRequestHandler(accountService));
+        EmbeddedChannel channel = new EmbeddedChannel(new AuthRequestHandler(
+                new ExtendedContext(),
+                accountService
+        ));
 
         Message loginRequest = Message.newBuilder()
                 .setSeqId(123)

@@ -10,6 +10,16 @@ import octoteam.tahiti.protocol.SocketMessageProtos.Message;
  */
 public abstract class MessageHandler extends ChannelDuplexHandler {
 
+    private ExtendedContext extendedContext;
+
+    public MessageHandler(ExtendedContext extendedContext) {
+        this.extendedContext = extendedContext;
+    }
+
+    protected ExtendedContext getExtendedContext() {
+        return extendedContext;
+    }
+
     @Override
     final public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         if (msg instanceof Message) {

@@ -7,6 +7,7 @@ import octoteam.tahiti.protocol.SocketMessageProtos.Message;
 import octoteam.tahiti.server.event.MessageEvent;
 import octoteam.tahiti.server.session.Credential;
 import octoteam.tahiti.server.session.PipelineHelper;
+import octoteam.tahiti.shared.netty.ExtendedContext;
 import octoteam.tahiti.shared.netty.MessageHandler;
 import octoteam.tahiti.shared.protocol.ProtocolUtil;
 
@@ -18,6 +19,10 @@ import octoteam.tahiti.shared.protocol.ProtocolUtil;
  */
 @ChannelHandler.Sharable
 public class AuthFilterHandler extends MessageHandler {
+
+    public AuthFilterHandler(ExtendedContext extendedContext) {
+        super(extendedContext);
+    }
 
     /**
      * @param ctx 管道环境
