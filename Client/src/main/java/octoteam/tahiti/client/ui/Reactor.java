@@ -5,7 +5,6 @@ import octoteam.tahiti.client.TahitiClient;
 import octoteam.tahiti.client.event.*;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
 import octoteam.tahiti.protocol.SocketMessageProtos.SessionExpiredPushBody;
-import octoteam.tahiti.protocol.SocketMessageProtos.User;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.stream.Collectors;
@@ -95,10 +94,10 @@ public class Reactor {
             client.joinGroup(groupToJoin, msg -> {
                 if (msg.getStatus() == Message.StatusCode.SUCCESS) {
                     renderer.actionAppendNotice(String.format(
-                            "You have joined group '%s'. Online users: %s",
+                            "You have joined group #%s. Online users: %s",
                             groupToJoin,
                             msg.getGroupResp().getUserList().stream()
-                                    .map(User::getUsername)
+                                    .map(u -> "@" + u.getUsername())
                                     .collect(Collectors.joining(", "))
                     ));
                 }
@@ -145,6 +144,21 @@ public class Reactor {
                 ));
             }
         });
+    }
+
+    /**
+     * 处理用户加入组或离开组事件: 显示在界面上
+     *
+     * @param event 事件对象
+     */
+    @Subscribe
+    public void onGroupEvent(GroupEvent event) {
+        renderer.actionAppendNotice(String.format(
+                "@%s %s group #%s",
+                event.getUsername(),
+                event.isLeave() ? "left" : "joined",
+                event.getGroup()
+        ));
     }
 
     /**

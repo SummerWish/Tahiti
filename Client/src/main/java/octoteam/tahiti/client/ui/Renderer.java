@@ -246,13 +246,13 @@ public class Renderer {
     public void actionAppendNotice(String content) {
         String prefixed = "";
         String[] line = content.split("\n");
-        for (String l : line) prefixed += "# " + l + "\n";
+        for (String l : line) prefixed += "! " + l + "\n";
 
         final String p = prefixed;
 
         store.update(() -> {
             store.put(MAIN_WINDOW_TEXT, String.format(
-                    "%s# NOTICE\n%s\n\n",
+                    "%s%s\n\n",
                     store.get(MAIN_WINDOW_TEXT),
                     p.trim()
             ));
