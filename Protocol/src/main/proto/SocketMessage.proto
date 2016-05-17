@@ -61,7 +61,8 @@ message Message {
     ChatSyncReqBody           chatSyncReq         = 40;
     ChatSyncRespBody          chatSyncResp        = 41;
     GroupReqBody              groupReq            = 50;
-    GroupPushBody             groupPushBody       = 51;
+    GroupRespBody             groupResp           = 51;
+    GroupPushBody             groupPushBody       = 52;
   }
 
 }
@@ -114,7 +115,7 @@ message ChatMessage {
 
 message ChatSyncRespBody {
   string groupId                = 1;
-  repeated ChatMessage messages = 2;
+  repeated ChatMessage message  = 2;
 }
 
 enum GroupOperation {
@@ -127,8 +128,13 @@ message GroupReqBody {
   GroupOperation op             = 2;
 }
 
+// Only for the join operation
+message GroupRespBody {
+  repeated User user            = 1;
+}
+
 message GroupPushBody {
   string groupId                = 1;
   GroupOperation op             = 2;
-  repeated User latestUsers     = 3;
+  User user                     = 3;
 }

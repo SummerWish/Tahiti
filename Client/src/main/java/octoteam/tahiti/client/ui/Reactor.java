@@ -3,9 +3,11 @@ package octoteam.tahiti.client.ui;
 import com.google.common.eventbus.Subscribe;
 import octoteam.tahiti.client.TahitiClient;
 import octoteam.tahiti.client.event.*;
-import octoteam.tahiti.protocol.SocketMessageProtos.Message;
-import octoteam.tahiti.protocol.SocketMessageProtos.SessionExpiredPushBody;
+import octoteam.tahiti.protocol.SocketMessageProtos.*;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Reactor {
 
@@ -89,7 +91,19 @@ public class Reactor {
     public void onLoginResponse(LoginAttemptEvent event) {
         if (event.isSuccess()) {
             renderer.actionAppendNotice("You are logged in.");
-            client.joinGroup(groupToJoin);
+            // join group
+            client.joinGroup(groupToJoin, msg -> {
+                if (msg.getStatus() == Message.StatusCode.SUCCESS) {
+                    renderer.actionAppendNotice(String.format(
+                            "You have joined group '%s'. Online users: %s",
+                            groupToJoin,
+                            msg.getGroupResp().getUserList().stream()
+                                    .map(User::getUsername)
+                                    .collect(Collectors.joining(", "))
+                    ));
+                }
+                return null;
+            });
         }
     }
 
