@@ -143,19 +143,20 @@ public class TahitiClient {
         login(username, password, null);
     }
 
-    public void sendMessage(String message, Consumer<Message> callback) {
+    public void sendMessage(String group, String message, Consumer<Message> callback) {
         Message.Builder req = buildRequest(callback)
                 .setService(Message.ServiceCode.CHAT_PUBLISH_REQUEST)
                 .setChatPublishReq(ChatPublishReqBody.newBuilder()
                         .setPayload(message)
+                        .setGroupId(group)
                         .setTimestamp(new Date().getTime())
                 );
         Message msg = req.build();
         channel.writeAndFlush(msg);
     }
 
-    public void sendMessage(String message) {
-        sendMessage(message, null);
+    public void sendMessage(String group, String message) {
+        sendMessage(group, message, null);
     }
 
     public void joinGroup(String group, Consumer<Message> callback) {
@@ -173,17 +174,19 @@ public class TahitiClient {
         joinGroup(group, null);
     }
 
-    /*
-    public void sendGroupCommand(UserGroupingReqBody.Action action, String groupId, Function<Message, Void> callback) {
+    public void syncGroupMessage(String group, long since, Consumer<Message> callback) {
         Message.Builder req = buildRequest(callback)
-                .setService(Message.ServiceCode.USER_GROUPING_REQUEST)
-                .setUserGroupingReq(UserGroupingReqBody.newBuilder()
-                        .setAction(action)
-                        .setGroupId(groupId)
+                .setService(Message.ServiceCode.CHAT_SYNC_REQUEST)
+                .setChatSyncReq(ChatSyncReqBody.newBuilder()
+                        .setGroupId(group)
+                        .setSince(since)
                 );
-        Message groupMsg = req.build();
-        channel.writeAndFlush(groupMsg);
+        Message msg = req.build();
+        channel.writeAndFlush(msg);
     }
-    */
+
+    public void syncGroupMessage(String group, long since) {
+        syncGroupMessage(group, since, null);
+    }
 
 }

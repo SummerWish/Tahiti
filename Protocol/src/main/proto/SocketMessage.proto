@@ -58,8 +58,9 @@ message Message {
     UserSignInRespBody        userSignInResp      = 11;
     ChatPublishReqBody        chatPublishReq      = 20;
     SessionExpiredPushBody    sessionExpiredPush  = 30;
-    ChatSyncReqBody           chatSyncReq         = 40;
-    ChatSyncRespBody          chatSyncResp        = 41;
+    BroadcastPushBody         broadcastPush       = 40;
+    ChatSyncReqBody           chatSyncReq         = 41;
+    ChatSyncRespBody          chatSyncResp        = 42;
     GroupReqBody              groupReq            = 50;
     GroupRespBody             groupResp           = 51;
     GroupPushBody             groupPushBody       = 52;
@@ -70,6 +71,13 @@ message Message {
 message User {
   int32 UID                     = 1;
   string username               = 2;
+}
+
+message ChatMessage {
+  User user                     = 1;
+  string payload                = 2;
+  uint64 timestamp              = 3;
+  string groupId                = 4;
 }
 
 message PingPongBody {
@@ -101,21 +109,19 @@ message SessionExpiredPushBody {
   Reason reason                 = 1;
 }
 
+message BroadcastPushBody {
+  string groupId                = 1;
+}
+
 message ChatSyncReqBody {
   string groupId                = 1;
   uint64 since                  = 2;
 }
 
-message ChatMessage {
-  User user                     = 1;
-  string payload                = 2;
-  uint64 timestamp              = 3;
-  string groupId                = 4;
-}
-
 message ChatSyncRespBody {
   string groupId                = 1;
-  repeated ChatMessage message  = 2;
+  uint64 time                   = 2;
+  repeated ChatMessage message  = 3;
 }
 
 enum GroupOperation {

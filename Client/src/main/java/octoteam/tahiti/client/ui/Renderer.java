@@ -250,8 +250,8 @@ public class Renderer {
                     "%s%s\n\n",
                     store.get(MAIN_WINDOW_TEXT),
                     Arrays.asList(content.split("\n")).stream()
-                        .map(str -> "!" + str)
-                        .collect(Collectors.joining("\n"))
+                            .map(str -> "!" + str)
+                            .collect(Collectors.joining("\n"))
             ));
         });
     }

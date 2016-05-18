@@ -4,7 +4,7 @@ import com.google.common.base.MoreObjects;
 import octoteam.tahiti.shared.event.BaseEvent;
 
 /**
- * 其他用户发送消息事件
+ * @deprecated 其他用户发送消息事件
  */
 public class ChatMessageEvent extends BaseEvent {
 

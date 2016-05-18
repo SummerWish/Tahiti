@@ -15,7 +15,7 @@ import octoteam.tahiti.protocol.SocketMessageProtos.Message.ServiceCode;
 import octoteam.tahiti.server.event.RateLimitExceededEvent;
 import octoteam.tahiti.server.pipeline.*;
 import octoteam.tahiti.server.service.AccountService;
-import octoteam.tahiti.server.service.MessageService;
+import octoteam.tahiti.server.service.ChatService;
 import octoteam.tahiti.shared.netty.ExtendedContext;
 import octoteam.tahiti.shared.netty.pipeline.UserEventToEventBusHandler;
 import wheellllll.config.Config;
@@ -35,7 +35,7 @@ public class TahitiServer {
 
     private final AccountService accountService;
 
-    private final MessageService messageService;
+    private final ChatService chatService;
 
     private final ExtendedContext extendedContext = new ExtendedContext();
 
@@ -46,11 +46,11 @@ public class TahitiServer {
      * @param eventBus       服务端事件总线
      * @param accountService 用户服务
      */
-    public TahitiServer(Config config, EventBus eventBus, AccountService accountService, MessageService messageService) {
+    public TahitiServer(Config config, EventBus eventBus, AccountService accountService, ChatService chatService) {
         this.eventBus = eventBus;
         this.config = config;
         this.accountService = accountService;
-        this.messageService = messageService;
+        this.chatService = chatService;
     }
 
     /**
@@ -82,7 +82,6 @@ public class TahitiServer {
                                     .addLast(new PingRequestHandler(extendedContext))
                                     .addLast(new AuthRequestHandler(extendedContext, accountService))
                                     .addLast(new AuthFilterHandler(extendedContext))
-                                    .addLast(new GroupRequestHandler(extendedContext))
                                     .addLast(new RequestRateLimitHandler(
                                             extendedContext,
                                             ServiceCode.CHAT_PUBLISH_REQUEST,
@@ -98,7 +97,9 @@ public class TahitiServer {
                                                     config.getInt("rateLimit.perSession")))
                                     )
                                     .addLast(new SessionExpireHandler(extendedContext))
-                                    .addLast(new MessageRequestHandler(extendedContext, messageService))
+                                    .addLast(new GroupRequestHandler(extendedContext))
+                                    .addLast(new ChatPublishRequestHandler(extendedContext, chatService))
+                                    .addLast(new ChatSyncRequestHandler(extendedContext, chatService))
                                     .addLast(new UserEventToEventBusHandler(eventBus))
                             ;
                         }

@@ -7,13 +7,13 @@ import com.j256.ormlite.support.ConnectionSource;
 import octoteam.tahiti.archiver.RollingArchivePacker;
 import octoteam.tahiti.server.model.Account;
 import octoteam.tahiti.server.repository.AccountRepository;
+import octoteam.tahiti.server.repository.ChatRepository;
 import octoteam.tahiti.server.repository.DatabaseAccountRepository;
-import octoteam.tahiti.server.repository.DatabaseMessageRepository;
-import octoteam.tahiti.server.repository.MessageRepository;
+import octoteam.tahiti.server.repository.DatabaseChatRepository;
 import octoteam.tahiti.server.service.AccountService;
+import octoteam.tahiti.server.service.ChatService;
 import octoteam.tahiti.server.service.DefaultAccountService;
-import octoteam.tahiti.server.service.DefaultMessageService;
-import octoteam.tahiti.server.service.MessageService;
+import octoteam.tahiti.server.service.DefaultChatService;
 import octoteam.tahiti.shared.event.BaseEvent;
 import octoteam.tahiti.shared.logger.ReceivedMessageLogger;
 import org.apache.commons.cli.CommandLine;
@@ -45,8 +45,8 @@ public class Console {
         ConnectionSource connectionSource = new JdbcConnectionSource(config.getString("database"));
         AccountRepository accountRepository = new DatabaseAccountRepository(connectionSource);
         AccountService accountService = new DefaultAccountService(accountRepository);
-        MessageRepository messageRepository = new DatabaseMessageRepository(connectionSource);
-        MessageService messageService = new DefaultMessageService(messageRepository);
+        ChatRepository chatRepository = new DatabaseChatRepository(connectionSource);
+        ChatService chatService = new DefaultChatService(chatRepository);
 
         if (cmd.hasOption("a")) {
 
@@ -105,7 +105,7 @@ public class Console {
                     config,
                     serverEventBus,
                     accountService,
-                    messageService
+                    chatService
             );
 
             server.run();

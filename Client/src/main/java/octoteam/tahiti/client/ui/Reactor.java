@@ -17,7 +17,9 @@ public class Reactor {
 
     private String loginUsername;
     private String loginPassword;
-    private String groupToJoin;
+
+    private String group;
+    private long lastSyncAt = 0;
 
     public Reactor(TahitiClient client, Renderer renderer) {
         this.client = client;
@@ -91,11 +93,11 @@ public class Reactor {
         if (event.isSuccess()) {
             renderer.actionAppendNotice("You are logged in.");
             // join group
-            client.joinGroup(groupToJoin, msg -> {
+            client.joinGroup(group, msg -> {
                 if (msg.getStatus() == Message.StatusCode.SUCCESS) {
                     renderer.actionAppendNotice(String.format(
                             "You have joined group #%s. Online users: %s",
-                            groupToJoin,
+                            group,
                             msg.getGroupResp().getUserList().stream()
                                     .map(u -> "@" + u.getUsername())
                                     .collect(Collectors.joining(", "))
@@ -115,7 +117,7 @@ public class Reactor {
         try {
             loginUsername = event.getUsername();
             loginPassword = event.getPassword();
-            groupToJoin = event.getGroup();
+            group = event.getGroup();
             if (client.isConnected()) {
                 login();
             } else {
@@ -135,7 +137,7 @@ public class Reactor {
      */
     @Subscribe
     public void onClickSend(UIOnSendCommandEvent event) {
-        client.sendMessage(event.getPayload(), msg -> {
+        client.sendMessage(group, event.getPayload(), msg -> {
             if (msg.getStatus() != Message.StatusCode.SUCCESS) {
                 renderer.actionAppendNotice(String.format(
                         "Failed to deliver \"%s\"\nReason: %s",
@@ -144,6 +146,15 @@ public class Reactor {
                 ));
             }
         });
+    }
+
+    /**
+     * 处理新消息事件: 请求同步消息
+     * @param event 事件对象
+     */
+    @Subscribe
+    public void onGroupMessagePush(BroadcastPushEvent event) {
+        client.syncGroupMessage(event.getGroupId(), lastSyncAt);
     }
 
     /**

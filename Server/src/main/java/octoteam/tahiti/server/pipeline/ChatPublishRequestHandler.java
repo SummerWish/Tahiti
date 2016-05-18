@@ -2,8 +2,9 @@ package octoteam.tahiti.server.pipeline;
 
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
+import octoteam.tahiti.protocol.SocketMessageProtos.BroadcastPushBody;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
-import octoteam.tahiti.server.service.MessageService;
+import octoteam.tahiti.server.service.ChatService;
 import octoteam.tahiti.server.session.Credential;
 import octoteam.tahiti.server.session.PipelineHelper;
 import octoteam.tahiti.shared.event.MessageReceivedEvent;
@@ -12,16 +13,16 @@ import octoteam.tahiti.shared.netty.MessageHandler;
 import octoteam.tahiti.shared.protocol.ProtocolUtil;
 
 /**
- * 判断消息类型，如果属于CHAT_PUBLISH_REQUEST类型则回复成功。
+ * 处理用户发送消息的请求, 即 CHAT_PUBLISH_REQUEST
  */
 @ChannelHandler.Sharable
-public class MessageRequestHandler extends MessageHandler {
+public class ChatPublishRequestHandler extends MessageHandler {
 
-    private MessageService messageService;
+    private ChatService chatService;
 
-    public MessageRequestHandler(ExtendedContext extendedContext, MessageService messageService) {
+    public ChatPublishRequestHandler(ExtendedContext extendedContext, ChatService chatService) {
         super(extendedContext);
-        this.messageService = messageService;
+        this.chatService = chatService;
     }
 
     @Override
@@ -34,14 +35,13 @@ public class MessageRequestHandler extends MessageHandler {
         ctx.fireUserEventTriggered(new MessageReceivedEvent(msg));
 
         // Identify user group
-        // TODO: message should carry group id
-        String[] joinedGroups = getExtendedContext().getJoinedGroups(ctx.channel());
-        String group = joinedGroups[0];
+        String group = msg.getChatPublishReq().getGroupId();
 
         // Save message to database
         Credential currentCredential = (Credential) PipelineHelper.getSession(ctx.channel()).get("credential");
-        messageService.addMessage(
+        chatService.addChat(
                 currentCredential.getUID(),
+                currentCredential.getUsername(),
                 group,
                 msg.getChatPublishReq().getPayload()
         );
@@ -50,7 +50,10 @@ public class MessageRequestHandler extends MessageHandler {
         Message.Builder pushMessage = Message
                 .newBuilder()
                 .setDirection(Message.DirectionCode.PUSH)
-                .setService(Message.ServiceCode.CHAT_BROADCAST_PUSH);
+                .setService(Message.ServiceCode.CHAT_BROADCAST_PUSH)
+                .setBroadcastPush(BroadcastPushBody.newBuilder()
+                        .setGroupId(group)
+                );
         getExtendedContext().of(group).writeAndFlush(pushMessage);
 
         // Response OK
