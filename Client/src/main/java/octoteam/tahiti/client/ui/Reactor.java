@@ -46,7 +46,13 @@ public class Reactor {
     }
 
     void sync(String group) {
-        client.syncGroupMessage(group, (long) this.db.getOrDefault(DB_KEY_LAST_SYNC, 0L));
+        // TODO: per user, per group last sync time
+        long lastSince = (long) this.db.getOrDefault(DB_KEY_LAST_SYNC, 0L);
+        client.syncGroupMessage(
+                group,
+                lastSince,
+                (msg) -> this.db.put(DB_KEY_LAST_SYNC, msg.getChatSyncResp().getTime())
+        );
     }
 
     /**

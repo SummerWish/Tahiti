@@ -12,9 +12,9 @@ import octoteam.tahiti.shared.netty.MessageHandler;
  * 收到新聊天消息推送时, 进行消息同步
  */
 @ChannelHandler.Sharable
-public class BroadcastPushHandler extends MessageHandler {
+public class ChatBroadcastPushHandler extends MessageHandler {
 
-    public BroadcastPushHandler(ExtendedContext extendedContext) {
+    public ChatBroadcastPushHandler(ExtendedContext extendedContext) {
         super(extendedContext);
     }
 

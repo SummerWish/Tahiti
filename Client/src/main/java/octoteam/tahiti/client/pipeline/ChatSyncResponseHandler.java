@@ -1,5 +1,6 @@
 package octoteam.tahiti.client.pipeline;
 
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import octoteam.tahiti.client.event.ChatEvent;
 import octoteam.tahiti.protocol.SocketMessageProtos.ChatMessage;
@@ -9,6 +10,7 @@ import octoteam.tahiti.shared.netty.MessageHandler;
 
 import java.util.List;
 
+@ChannelHandler.Sharable
 public class ChatSyncResponseHandler extends MessageHandler {
 
     public ChatSyncResponseHandler(ExtendedContext extendedContext) {

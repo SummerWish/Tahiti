@@ -1,8 +1,9 @@
 package octoteam.tahiti.client.event;
 
 import com.google.common.base.MoreObjects;
+import octoteam.tahiti.shared.event.BaseEvent;
 
-public class BroadcastPushEvent {
+public class BroadcastPushEvent extends BaseEvent {
 
     private String groupId;
 

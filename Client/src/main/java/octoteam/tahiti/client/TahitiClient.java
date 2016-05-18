@@ -71,7 +71,7 @@ public class TahitiClient {
                                 .addLast(new SessionExpiredPushHandler(extendedContext))
                                 .addLast(new MessageReceivedHandler(extendedContext))
                                 .addLast(new GroupPushHandler(extendedContext))
-                                .addLast(new BroadcastPushHandler(extendedContext))
+                                .addLast(new ChatBroadcastPushHandler(extendedContext))
                                 .addLast(new ChatSyncResponseHandler(extendedContext))
                                 .addLast(new SendMessageFilterHandler(extendedContext))
                                 .addLast(new UserEventToEventBusHandler(eventBus))
