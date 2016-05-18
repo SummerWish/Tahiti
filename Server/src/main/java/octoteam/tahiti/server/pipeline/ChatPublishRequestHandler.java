@@ -39,6 +39,9 @@ public class ChatPublishRequestHandler extends MessageHandler {
 
         // Save message to database
         Credential currentCredential = (Credential) PipelineHelper.getSession(ctx.channel()).get("credential");
+        if (currentCredential == null) {
+            currentCredential = Credential.getGuestCredential();
+        }
         chatService.addChat(
                 currentCredential.getUID(),
                 currentCredential.getUsername(),
