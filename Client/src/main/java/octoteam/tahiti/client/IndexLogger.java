@@ -1,7 +1,7 @@
 package octoteam.tahiti.client;
 
 import com.google.common.eventbus.Subscribe;
-import octoteam.tahiti.client.event.ChatMessageEvent;
+import octoteam.tahiti.client.event.ChatEvent;
 import octoteam.tahiti.client.event.LoginAttemptEvent;
 import octoteam.tahiti.client.event.SendMessageEvent;
 import wheellllll.performance.ArchiveManager;
@@ -75,7 +75,7 @@ class IndexLogger {
      * @param event 事件对象
      */
     @Subscribe
-    public void onReceiveChatMessage(ChatMessageEvent event) {
+    public void onReceiveChatMessage(ChatEvent event) {
         logger.updateIndex("Received Messages", 1);
     }
 }

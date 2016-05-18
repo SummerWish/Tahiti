@@ -42,6 +42,7 @@ public class DatabaseChatRepository extends DatabaseRepository<Chat, Integer> im
         try {
             qb.where()
                     .eq("groupId", groupId)
+                    .and()
                     .gt("sendAt", since);
             PreparedQuery<Chat> preparedQuery = qb.prepare();
             return getDAO().query(preparedQuery);

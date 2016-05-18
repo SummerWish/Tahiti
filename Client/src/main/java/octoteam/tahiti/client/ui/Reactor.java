@@ -193,15 +193,11 @@ public class Reactor {
         ));
     }
 
-    /**
-     * 处理发送消息事件: 显示在界面上
-     *
-     * @param event 事件对象
-     */
+    /*
     @Subscribe
     public void onSendMessage(SendMessageEvent event) {
         renderer.actionAppendChatMessage("Me", event.getTimestamp(), event.getPayload());
-    }
+    }*/
 
 }
 
