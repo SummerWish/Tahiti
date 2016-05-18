@@ -4,9 +4,9 @@ import com.google.common.base.MoreObjects;
 import octoteam.tahiti.shared.event.BaseEvent;
 
 /**
- * @deprecated 其他用户发送消息事件
+ * 用户发送消息事件 (包括自己和其他人)
  */
-public class ChatMessageEvent extends BaseEvent {
+public class ChatEvent extends BaseEvent {
 
     /**
      * 消息内容
@@ -23,7 +23,7 @@ public class ChatMessageEvent extends BaseEvent {
      */
     private long timestamp;
 
-    public ChatMessageEvent(String payload, String username, long timestamp) {
+    public ChatEvent(String payload, String username, long timestamp) {
         this.payload = payload;
         this.username = username;
         this.timestamp = timestamp;

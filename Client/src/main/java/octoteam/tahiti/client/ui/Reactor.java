@@ -1,6 +1,7 @@
 package octoteam.tahiti.client.ui;
 
 import com.google.common.eventbus.Subscribe;
+import octoteam.tahiti.client.NaiveDb;
 import octoteam.tahiti.client.TahitiClient;
 import octoteam.tahiti.client.event.*;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
@@ -11,6 +12,8 @@ import java.util.stream.Collectors;
 
 public class Reactor {
 
+    static final String DB_KEY_LAST_SYNC = "lastSync";
+
     private TahitiClient client;
 
     private Renderer renderer;
@@ -19,9 +22,11 @@ public class Reactor {
     private String loginPassword;
 
     private String group;
-    private long lastSyncAt = 0;
 
-    public Reactor(TahitiClient client, Renderer renderer) {
+    private NaiveDb db;
+
+    public Reactor(NaiveDb db, TahitiClient client, Renderer renderer) {
+        this.db = db;
         this.client = client;
         this.renderer = renderer;
     }
@@ -38,6 +43,10 @@ public class Reactor {
                 renderer.actionShowMainWindow();
             }
         });
+    }
+
+    void sync(String group) {
+        client.syncGroupMessage(group, (long) this.db.getOrDefault(DB_KEY_LAST_SYNC, 0L));
     }
 
     /**
@@ -102,6 +111,7 @@ public class Reactor {
                                     .map(u -> "@" + u.getUsername())
                                     .collect(Collectors.joining(", "))
                     ));
+                    sync(group);
                 }
             });
         }
@@ -150,11 +160,22 @@ public class Reactor {
 
     /**
      * 处理新消息事件: 请求同步消息
+     *
      * @param event 事件对象
      */
     @Subscribe
     public void onGroupMessagePush(BroadcastPushEvent event) {
-        client.syncGroupMessage(event.getGroupId(), lastSyncAt);
+        sync(event.getGroupId());
+    }
+
+    /**
+     * 处理单条消息事件
+     *
+     * @param event 事件对象
+     */
+    @Subscribe
+    public void onChatEvent(ChatEvent event) {
+        renderer.actionAppendChatMessage(event.getUsername(), event.getTimestamp(), event.getPayload());
     }
 
     /**
@@ -180,16 +201,6 @@ public class Reactor {
     @Subscribe
     public void onSendMessage(SendMessageEvent event) {
         renderer.actionAppendChatMessage("Me", event.getTimestamp(), event.getPayload());
-    }
-
-    /**
-     * 处理收到广播消息事件: 显示在界面上
-     *
-     * @param event 事件对象
-     */
-    @Subscribe
-    public void onReceiveChatMessage(ChatMessageEvent event) {
-        renderer.actionAppendChatMessage(event.getUsername(), event.getTimestamp(), event.getPayload());
     }
 
 }

@@ -38,7 +38,7 @@ public class Chat {
     private int userId;
 
     /**
-     * 发送者用户名, 这应当在发送时固定下来而不是刻意后续改变的
+     * 发送者用户名, 这应当在发送时固定下来而不是可以后续改变的
      */
     @DatabaseField(canBeNull = false)
     private String username;

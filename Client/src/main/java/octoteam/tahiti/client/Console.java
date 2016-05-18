@@ -16,12 +16,14 @@ public class Console {
         Config.setConfigName(Paths.get(Console.class.getClass().getResource("/tahiti_client.conf").toURI()).toString());
         Config config = Config.getConfig();
 
+        NaiveDb clientDb = new NaiveDb("resource/client.json");
+
         // Create event bus
         EventBus clientEventBus = new EventBus();
 
         TahitiClient client = new TahitiClient(config, clientEventBus);
         Renderer renderer = new Renderer(clientEventBus);
-        Reactor reactor = new Reactor(client, renderer);
+        Reactor reactor = new Reactor(clientDb, client, renderer);
 
         clientEventBus.register(reactor);
         clientEventBus.register(new IndexLogger(
