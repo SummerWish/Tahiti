@@ -7,6 +7,8 @@ import octoteam.tahiti.protocol.SocketMessageProtos.Message;
 import octoteam.tahiti.protocol.SocketMessageProtos.SessionExpiredPushBody;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
+
 public class Reactor {
 
     private TahitiClient client;
@@ -144,6 +146,10 @@ public class Reactor {
                 ));
             } else {
                 renderer.actionAppendNotice("You are now in Group: " + event.getGroupId());
+                List<String> groupMembers = msg.getGroupMembersRespBody().getUsernameList();
+                for (String memberName : groupMembers) {
+                    renderer.actionAppendNotice(memberName);
+                }
             }
             return null;
         });

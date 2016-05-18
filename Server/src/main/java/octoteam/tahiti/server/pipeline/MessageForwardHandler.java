@@ -68,12 +68,10 @@ public class MessageForwardHandler extends MessageHandler {
                 }
                 if (isSuccessful) {
                     GroupMembersRespBody.Builder builder = GroupMembersRespBody.newBuilder().setGroupId(groupId);
-                    int memberIndex = 1;
                     for (Channel memberChannel : group) {
                         Credential credential = (Credential) PipelineHelper.getSession(memberChannel).get("credential");
                         String username = credential.getUsername();
-                        builder.setUsername(memberIndex, username);
-                        memberIndex += 1;
+                        builder.addUsername(username);
                     }
                     Message groupMembersResp = ProtocolUtil
                             .buildResponse(msg)
@@ -82,14 +80,9 @@ public class MessageForwardHandler extends MessageHandler {
                             .build();
                     ctx.channel().writeAndFlush(groupMembersResp);
                 }
-            } else {
-                isSuccessful = group != null && group.remove(ctx.channel());
+            } else if (msg.getUserGroupingReq().getAction() == Action.LEAVE) {
+                group.remove(ctx.channel());
             }
-            Message resp = ProtocolUtil.
-                    buildResponse(msg)
-                    .setStatus(isSuccessful ? Message.StatusCode.SUCCESS : Message.StatusCode.FAIL)
-                    .build();
-            ctx.channel().writeAndFlush(resp);
         }
         ctx.fireChannelRead(msg);
     }
