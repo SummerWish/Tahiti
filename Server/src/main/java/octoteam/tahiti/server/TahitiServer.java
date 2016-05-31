@@ -14,8 +14,8 @@ import octoteam.tahiti.protocol.SocketMessageProtos.Message;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message.ServiceCode;
 import octoteam.tahiti.server.event.RateLimitExceededEvent;
 import octoteam.tahiti.server.pipeline.*;
-import octoteam.tahiti.server.service.AccountService;
-import octoteam.tahiti.server.service.ChatService;
+import octoteam.tahiti.server.shared.microservice.rmi.IAuthServiceProvider;
+import octoteam.tahiti.server.shared.microservice.rmi.IStorageServiceProvider;
 import octoteam.tahiti.shared.netty.ExtendedContext;
 import octoteam.tahiti.shared.netty.pipeline.UserEventToEventBusHandler;
 import wheellllll.config.Config;
@@ -33,9 +33,9 @@ public class TahitiServer {
 
     private final Config config;
 
-    private final AccountService accountService;
+    private final IAuthServiceProvider accountService;
 
-    private final ChatService chatService;
+    private final IStorageServiceProvider chatService;
 
     private final ExtendedContext extendedContext = new ExtendedContext();
 
@@ -46,7 +46,7 @@ public class TahitiServer {
      * @param eventBus       服务端事件总线
      * @param accountService 用户服务
      */
-    public TahitiServer(Config config, EventBus eventBus, AccountService accountService, ChatService chatService) {
+    public TahitiServer(Config config, EventBus eventBus, IAuthServiceProvider accountService, IStorageServiceProvider chatService) {
         this.eventBus = eventBus;
         this.config = config;
         this.accountService = accountService;

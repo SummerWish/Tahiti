@@ -4,13 +4,15 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import octoteam.tahiti.protocol.SocketMessageProtos.BroadcastPushBody;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
-import octoteam.tahiti.server.service.ChatService;
 import octoteam.tahiti.server.session.Credential;
 import octoteam.tahiti.server.session.PipelineHelper;
+import octoteam.tahiti.server.shared.microservice.rmi.IStorageServiceProvider;
 import octoteam.tahiti.shared.event.MessageReceivedEvent;
 import octoteam.tahiti.shared.netty.ExtendedContext;
 import octoteam.tahiti.shared.netty.MessageHandler;
 import octoteam.tahiti.shared.protocol.ProtocolUtil;
+
+import java.rmi.RemoteException;
 
 /**
  * 处理用户发送消息的请求, 即 CHAT_PUBLISH_REQUEST
@@ -18,15 +20,15 @@ import octoteam.tahiti.shared.protocol.ProtocolUtil;
 @ChannelHandler.Sharable
 public class ChatPublishRequestHandler extends MessageHandler {
 
-    private ChatService chatService;
+    private IStorageServiceProvider chatService;
 
-    public ChatPublishRequestHandler(ExtendedContext extendedContext, ChatService chatService) {
+    public ChatPublishRequestHandler(ExtendedContext extendedContext, IStorageServiceProvider chatService) {
         super(extendedContext);
         this.chatService = chatService;
     }
 
     @Override
-    protected void messageReceived(ChannelHandlerContext ctx, Message msg) {
+    protected void messageReceived(ChannelHandlerContext ctx, Message msg) throws RemoteException {
         if (msg.getService() != Message.ServiceCode.CHAT_PUBLISH_REQUEST) {
             ctx.fireChannelRead(msg);
             return;

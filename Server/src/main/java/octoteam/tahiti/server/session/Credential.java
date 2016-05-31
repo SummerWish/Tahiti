@@ -1,7 +1,7 @@
 package octoteam.tahiti.server.session;
 
 import com.google.common.base.MoreObjects;
-import octoteam.tahiti.server.model.Account;
+import octoteam.tahiti.server.shared.model.Account;
 
 /**
  * 存放于 Session 的用户凭证

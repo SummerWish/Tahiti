@@ -5,6 +5,10 @@
       <module fileurl="file://$PROJECT_DIR$/Client/Client.iml" filepath="$PROJECT_DIR$/Client/Client.iml" />
       <module fileurl="file://$PROJECT_DIR$/Protocol/Protocol.iml" filepath="$PROJECT_DIR$/Protocol/Protocol.iml" />
       <module fileurl="file://$PROJECT_DIR$/Server/Server.iml" filepath="$PROJECT_DIR$/Server/Server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Server.AuthService/Server.AuthService.iml" filepath="$PROJECT_DIR$/Server.AuthService/Server.AuthService.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Server.GroupService/Server.GroupService.iml" filepath="$PROJECT_DIR$/Server.GroupService/Server.GroupService.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Server.StorageService/Server.StorageService.iml" filepath="$PROJECT_DIR$/Server.StorageService/Server.StorageService.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ServerShared/ServerShared.iml" filepath="$PROJECT_DIR$/ServerShared/ServerShared.iml" />
       <module fileurl="file://$PROJECT_DIR$/Shared/Shared.iml" filepath="$PROJECT_DIR$/Shared/Shared.iml" />
       <module fileurl="file://$PROJECT_DIR$/Tahiti.iml" filepath="$PROJECT_DIR$/Tahiti.iml" />
     </modules>

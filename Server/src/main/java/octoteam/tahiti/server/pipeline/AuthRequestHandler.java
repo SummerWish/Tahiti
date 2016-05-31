@@ -6,15 +6,17 @@ import octoteam.tahiti.protocol.SocketMessageProtos.Message;
 import octoteam.tahiti.protocol.SocketMessageProtos.UserSignInReqBody;
 import octoteam.tahiti.protocol.SocketMessageProtos.UserSignInRespBody;
 import octoteam.tahiti.server.event.LoginAttemptEvent;
-import octoteam.tahiti.server.model.Account;
-import octoteam.tahiti.server.service.AccountNotFoundException;
-import octoteam.tahiti.server.service.AccountNotMatchException;
-import octoteam.tahiti.server.service.AccountService;
 import octoteam.tahiti.server.session.Credential;
 import octoteam.tahiti.server.session.PipelineHelper;
+import octoteam.tahiti.server.shared.microservice.rmi.AccountNotFoundException;
+import octoteam.tahiti.server.shared.microservice.rmi.AccountNotMatchException;
+import octoteam.tahiti.server.shared.microservice.rmi.IAuthServiceProvider;
+import octoteam.tahiti.server.shared.model.Account;
 import octoteam.tahiti.shared.netty.ExtendedContext;
 import octoteam.tahiti.shared.netty.MessageHandler;
 import octoteam.tahiti.shared.protocol.ProtocolUtil;
+
+import java.rmi.RemoteException;
 
 /**
  * 该模块处理下行的登录请求 (Request)，通过 `AccountService` 进行验证。
@@ -25,18 +27,18 @@ import octoteam.tahiti.shared.protocol.ProtocolUtil;
 @ChannelHandler.Sharable
 public class AuthRequestHandler extends MessageHandler {
 
-    private final AccountService accountService;
+    private final IAuthServiceProvider accountService;
 
     /**
      * @param accountService 账户服务模块
      */
-    public AuthRequestHandler(ExtendedContext extendedContext, AccountService accountService) {
+    public AuthRequestHandler(ExtendedContext extendedContext, IAuthServiceProvider accountService) {
         super(extendedContext);
         this.accountService = accountService;
     }
 
     @Override
-    protected void messageReceived(ChannelHandlerContext ctx, Message msg) {
+    protected void messageReceived(ChannelHandlerContext ctx, Message msg) throws RemoteException {
         if (msg.getService() != Message.ServiceCode.USER_SIGN_IN_REQUEST) {
             ctx.fireChannelRead(msg);
             return;

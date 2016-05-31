@@ -6,12 +6,13 @@ import octoteam.tahiti.protocol.SocketMessageProtos.ChatMessage;
 import octoteam.tahiti.protocol.SocketMessageProtos.ChatSyncRespBody;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
 import octoteam.tahiti.protocol.SocketMessageProtos.User;
-import octoteam.tahiti.server.model.Chat;
-import octoteam.tahiti.server.service.ChatService;
+import octoteam.tahiti.server.shared.microservice.rmi.IStorageServiceProvider;
+import octoteam.tahiti.server.shared.model.Chat;
 import octoteam.tahiti.shared.netty.ExtendedContext;
 import octoteam.tahiti.shared.netty.MessageHandler;
 import octoteam.tahiti.shared.protocol.ProtocolUtil;
 
+import java.rmi.RemoteException;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,14 +23,14 @@ import java.util.stream.Collectors;
 @ChannelHandler.Sharable
 public class ChatSyncRequestHandler extends MessageHandler {
 
-    private ChatService chatService;
+    private IStorageServiceProvider chatService;
 
-    public ChatSyncRequestHandler(ExtendedContext extendedContext, ChatService chatService) {
+    public ChatSyncRequestHandler(ExtendedContext extendedContext, IStorageServiceProvider chatService) {
         super(extendedContext);
         this.chatService = chatService;
     }
 
-    private List<ChatMessage> getGroupHistoryMessages(String group, long since) {
+    private List<ChatMessage> getGroupHistoryMessages(String group, long since) throws RemoteException {
         List<Chat> chats = chatService.getGroupChatsSince(group, since);
         return chats.stream()
                 .map(m -> ChatMessage.newBuilder()
@@ -46,7 +47,7 @@ public class ChatSyncRequestHandler extends MessageHandler {
     }
 
     @Override
-    protected void messageReceived(ChannelHandlerContext ctx, Message msg) {
+    protected void messageReceived(ChannelHandlerContext ctx, Message msg) throws RemoteException {
         if (msg.getService() != Message.ServiceCode.CHAT_SYNC_REQUEST) {
             ctx.fireChannelRead(msg);
             return;

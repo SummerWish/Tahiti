@@ -25,6 +25,10 @@
         <module name="Client" />
         <module name="Protocol" />
         <module name="Server" />
+        <module name="Server.AuthService" />
+        <module name="Server.GroupService" />
+        <module name="Server.StorageService" />
+        <module name="ServerShared" />
         <module name="Shared" />
       </profile>
     </annotationProcessing>
@@ -32,6 +36,10 @@
       <module name="Client" target="1.8" />
       <module name="Protocol" target="1.8" />
       <module name="Server" target="1.8" />
+      <module name="Server.AuthService" target="1.8" />
+      <module name="Server.GroupService" target="1.8" />
+      <module name="Server.StorageService" target="1.8" />
+      <module name="ServerShared" target="1.8" />
       <module name="Shared" target="1.8" />
       <module name="Tahiti" target="1.8" />
     </bytecodeTargetLevel>

@@ -14,6 +14,10 @@
         <module>Client</module>
         <module>Protocol</module>
         <module>Shared</module>
+        <module>ServerShared</module>
+        <module>Server.AuthService</module>
+        <module>Server.StorageService</module>
+        <module>Server.GroupService</module>
     </modules>
 
     <dependencies>

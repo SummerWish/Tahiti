@@ -2,6 +2,7 @@
 logs/
 
 resource/*
+!resource/*.conf
 !.gitkeep
 
 .DS_Store
