@@ -1,6 +1,6 @@
 package octoteam.tahiti.server.shared.microservice.rmi;
 
-import octoteam.tahiti.server.shared.model.Chat;
+import io.netty.channel.ChannelId;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -15,7 +15,7 @@ public interface IGroupServiceProvider extends Remote {
      * @param group     组名
      * @throws RemoteException
      */
-    public void joinGroup(String channelId, String group) throws RemoteException;
+    public void joinGroup(ChannelId channelId, String group) throws RemoteException;
 
     /**
      * 离开群组
@@ -24,15 +24,24 @@ public interface IGroupServiceProvider extends Remote {
      * @param group     组名
      * @throws RemoteException
      */
-    public void leaveGroup(String channelId, String group) throws RemoteException;
+    public void leaveGroup(ChannelId channelId, String group) throws RemoteException;
 
     /**
-     * 查询发布消息所影响的 Channel 列表
+     * 查询群组中所有的 Channel ID
      *
-     * @param chat 消息
-     * @return 受影响的 Channel ID 列表
+     * @param group 组名
+     * @return Channel ID 列表
      * @throws RemoteException
      */
-    public List<String> getDirtyChannels(Chat chat) throws RemoteException;
+    public List<ChannelId> getChannelsInGroup(String group) throws RemoteException;
+
+    /**
+     * 查询一个 Channel 所加入的群组
+     *
+     * @param channelId Channel ID
+     * @return 群组列表
+     * @throws RemoteException
+     */
+    public List<String> getJoinedGroups(ChannelId channelId) throws RemoteException;
 
 }

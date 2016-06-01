@@ -2,6 +2,7 @@ package octoteam.tahiti.shared.netty;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelId;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.util.AttributeKey;
@@ -12,10 +13,27 @@ import java.util.HashSet;
 
 public class ExtendedContext {
 
+    private ChannelGroup connectedChannels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+
+    public ChannelId addToManagedChannels(Channel ch) {
+        connectedChannels.add(ch);
+        return ch.id();
+    }
+
+    public Channel lookupManagedChannels(ChannelId id) {
+        return connectedChannels.find(id);
+    }
+
     private final static AttributeKey<HashSet<String>> ATTR_KEY_IN_GROUPS = AttributeKey.valueOf("__in_groups");
 
+    /**
+     * @deprecated
+     */
     private HashMap<String, ChannelGroup> groups = new HashMap<>();
 
+    /**
+     * @deprecated
+     */
     private final ChannelFutureListener remover = future -> {
         Channel channel = future.channel();
         HashSet<String> g = channel.attr(ATTR_KEY_IN_GROUPS).get();
@@ -26,6 +44,11 @@ public class ExtendedContext {
         }
     };
 
+    /**
+     * @param channel
+     * @param group
+     * @deprecated
+     */
     public void join(Channel channel, String group) {
         // TODO: lock groups
         if (!groups.containsKey(group)) {
@@ -41,6 +64,11 @@ public class ExtendedContext {
         channel.closeFuture().addListener(remover);
     }
 
+    /**
+     * @param channel
+     * @param group
+     * @deprecated
+     */
     public void leave(Channel channel, String group) {
         // TODO: lock groups
         if (!groups.containsKey(group)) {
@@ -58,6 +86,11 @@ public class ExtendedContext {
         channel.closeFuture().removeListener(remover);
     }
 
+    /**
+     * @param channel
+     * @return
+     * @deprecated
+     */
     public String[] getJoinedGroups(Channel channel) {
         HashSet<String> g = channel.attr(ATTR_KEY_IN_GROUPS).get();
         if (g == null) {
@@ -67,6 +100,11 @@ public class ExtendedContext {
         }
     }
 
+    /**
+     * @param group
+     * @return
+     * @deprecated
+     */
     public ChannelGroup of(String group) {
         if (groups.containsKey(group)) {
             return groups.get(group);

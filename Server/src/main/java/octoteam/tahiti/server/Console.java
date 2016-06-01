@@ -4,6 +4,7 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import octoteam.tahiti.archiver.RollingArchivePacker;
 import octoteam.tahiti.server.shared.microservice.rmi.IAuthServiceProvider;
+import octoteam.tahiti.server.shared.microservice.rmi.IGroupServiceProvider;
 import octoteam.tahiti.server.shared.microservice.rmi.IStorageServiceProvider;
 import octoteam.tahiti.server.shared.microservice.rmi.RegistryConfig;
 import octoteam.tahiti.shared.event.BaseEvent;
@@ -11,7 +12,6 @@ import octoteam.tahiti.shared.logger.ReceivedMessageLogger;
 import wheellllll.config.Config;
 
 import java.rmi.Naming;
-
 
 public class Console {
 
@@ -23,6 +23,7 @@ public class Console {
 
         IAuthServiceProvider accountService = (IAuthServiceProvider) Naming.lookup("rmi://" + RegistryConfig.AuthServiceIp + ":" + RegistryConfig.AuthServicePort + "/AuthService");
         IStorageServiceProvider chatService = (IStorageServiceProvider) Naming.lookup("rmi://" + RegistryConfig.StorageServiceIp + ":" + RegistryConfig.StorageServicePort + "/StorageService");
+        IGroupServiceProvider groupService = (IGroupServiceProvider) Naming.lookup("rmi://" + RegistryConfig.GroupServiceIp + ":" + RegistryConfig.GroupServicePort + "/GroupService");
 
         // Create event bus
         EventBus serverEventBus = new EventBus();
@@ -64,7 +65,8 @@ public class Console {
                 config,
                 serverEventBus,
                 accountService,
-                chatService
+                chatService,
+                groupService
         );
 
         server.run();

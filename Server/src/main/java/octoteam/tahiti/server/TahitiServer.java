@@ -15,6 +15,7 @@ import octoteam.tahiti.protocol.SocketMessageProtos.Message.ServiceCode;
 import octoteam.tahiti.server.event.RateLimitExceededEvent;
 import octoteam.tahiti.server.pipeline.*;
 import octoteam.tahiti.server.shared.microservice.rmi.IAuthServiceProvider;
+import octoteam.tahiti.server.shared.microservice.rmi.IGroupServiceProvider;
 import octoteam.tahiti.server.shared.microservice.rmi.IStorageServiceProvider;
 import octoteam.tahiti.shared.netty.ExtendedContext;
 import octoteam.tahiti.shared.netty.pipeline.UserEventToEventBusHandler;
@@ -37,6 +38,8 @@ public class TahitiServer {
 
     private final IStorageServiceProvider chatService;
 
+    private final IGroupServiceProvider groupService;
+
     private final ExtendedContext extendedContext = new ExtendedContext();
 
     /**
@@ -46,11 +49,18 @@ public class TahitiServer {
      * @param eventBus       服务端事件总线
      * @param accountService 用户服务
      */
-    public TahitiServer(Config config, EventBus eventBus, IAuthServiceProvider accountService, IStorageServiceProvider chatService) {
+    public TahitiServer(
+            Config config,
+            EventBus eventBus,
+            IAuthServiceProvider accountService,
+            IStorageServiceProvider chatService,
+            IGroupServiceProvider groupService
+    ) {
         this.eventBus = eventBus;
         this.config = config;
         this.accountService = accountService;
         this.chatService = chatService;
+        this.groupService = groupService;
     }
 
     /**
@@ -97,8 +107,8 @@ public class TahitiServer {
                                                     config.getInt("rateLimit.perSession")))
                                     )
                                     .addLast(new SessionExpireHandler(extendedContext))
-                                    .addLast(new GroupRequestHandler(extendedContext))
-                                    .addLast(new ChatPublishRequestHandler(extendedContext, chatService))
+                                    .addLast(new GroupRequestHandler(extendedContext, groupService))
+                                    .addLast(new ChatPublishRequestHandler(extendedContext, chatService, groupService))
                                     .addLast(new ChatSyncRequestHandler(extendedContext, chatService))
                                     .addLast(new UserEventToEventBusHandler(eventBus))
                             ;

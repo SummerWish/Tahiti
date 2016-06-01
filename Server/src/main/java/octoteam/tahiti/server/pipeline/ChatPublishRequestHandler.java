@@ -1,11 +1,14 @@
 package octoteam.tahiti.server.pipeline;
 
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelId;
 import octoteam.tahiti.protocol.SocketMessageProtos.BroadcastPushBody;
 import octoteam.tahiti.protocol.SocketMessageProtos.Message;
 import octoteam.tahiti.server.session.Credential;
 import octoteam.tahiti.server.session.PipelineHelper;
+import octoteam.tahiti.server.shared.microservice.rmi.IGroupServiceProvider;
 import octoteam.tahiti.server.shared.microservice.rmi.IStorageServiceProvider;
 import octoteam.tahiti.shared.event.MessageReceivedEvent;
 import octoteam.tahiti.shared.netty.ExtendedContext;
@@ -13,6 +16,7 @@ import octoteam.tahiti.shared.netty.MessageHandler;
 import octoteam.tahiti.shared.protocol.ProtocolUtil;
 
 import java.rmi.RemoteException;
+import java.util.List;
 
 /**
  * 处理用户发送消息的请求, 即 CHAT_PUBLISH_REQUEST
@@ -21,10 +25,16 @@ import java.rmi.RemoteException;
 public class ChatPublishRequestHandler extends MessageHandler {
 
     private IStorageServiceProvider chatService;
+    private IGroupServiceProvider groupService;
 
-    public ChatPublishRequestHandler(ExtendedContext extendedContext, IStorageServiceProvider chatService) {
+    public ChatPublishRequestHandler(
+            ExtendedContext extendedContext,
+            IStorageServiceProvider chatService,
+            IGroupServiceProvider groupService
+    ) {
         super(extendedContext);
         this.chatService = chatService;
+        this.groupService = groupService;
     }
 
     @Override
@@ -59,7 +69,13 @@ public class ChatPublishRequestHandler extends MessageHandler {
                 .setBroadcastPush(BroadcastPushBody.newBuilder()
                         .setGroupId(group)
                 );
-        getExtendedContext().of(group).writeAndFlush(pushMessage);
+        List<ChannelId> channels = groupService.getChannelsInGroup(group);
+        for (ChannelId channelId : channels) {
+            Channel ch = getExtendedContext().lookupManagedChannels(channelId);
+            if (ch != null) {
+                ch.writeAndFlush(pushMessage);
+            }
+        }
 
         // Response OK
         Message.Builder resp = ProtocolUtil
