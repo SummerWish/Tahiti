@@ -19,6 +19,8 @@
 
 [Discussion Solutions 讨论课解决方案_2](https://github.com/SummerWish/Tahiti/tree/master/doc/discussion_2)
 
+[Discussion Solutions 讨论课解决方案_3](https://github.com/SummerWish/Tahiti/tree/master/doc/discussion_3)
+
 [API Documentation 程序文档](https://summerwish.github.io/Tahiti/)
 
 [Reuse Documentation 复用文档](https://github.com/SummerWish/Tahiti/blob/master/doc/Tahiti%20%E6%9E%84%E4%BB%B6%E8%BD%AF%E4%BB%B6%E5%A4%8D%E7%94%A8%E6%96%87%E6%A1%A3.md)
